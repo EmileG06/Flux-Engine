@@ -46,10 +46,15 @@ project "Flux"
         "glad"
     }
 
+    filter "system:windows"
+        defines { "FX_PLATFORM_WINDOWS" }
+
     filter "configurations:Debug"
+        defines { "FX_CFG_DEBUG "}
         runtime "Debug"
         symbols "on"
 
     filter "configurations:Release"
+        defines { "FX_CFG_RELEASE "}
         runtime "Release"
         optimize "on"
