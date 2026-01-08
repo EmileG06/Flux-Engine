@@ -1,0 +1,18 @@
+# Visual Studio Files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Visual Studio Folderrs
+.vs/
+
+# Project Folders
+bin/
+
+# Project Files
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk

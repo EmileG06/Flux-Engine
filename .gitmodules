@@ -1,0 +1,6 @@
+[submodule "Flux/vendor/glfw"]
+	path = Flux/vendor/glfw
+	url = https://github.com/EmileG06/glfw
+[submodule "Flux/vendor/glad"]
+	path = Flux/vendor/glad
+	url = https://github.com/EmileG06/GLAD
