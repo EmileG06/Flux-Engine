@@ -1,4 +1,4 @@
-project "App"
+project "Editor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++23"
@@ -17,6 +17,7 @@ project "App"
 
     defines
     {
+        "_CRT_SECURE_NO_WARNINGS",
         "FX_BUILD_APP"
     }
 
@@ -30,6 +31,7 @@ project "App"
     {
         "src",
         "../Flux/src",
+        "../Flux/vendor",
         "%{Includes.glm}"
     }
 

@@ -11,6 +11,7 @@ namespace Flux {
 	{
 	public:
 		OpenGLContext(GLFWwindow* window);
+		virtual ~OpenGLContext() = default;
 
 		virtual void Init() override;
 		virtual void SwapBuffers() override;

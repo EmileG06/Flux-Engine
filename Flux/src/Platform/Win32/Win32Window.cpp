@@ -93,7 +93,7 @@ namespace Flux {
 				window.m_Data.Width = width;
 				window.m_Data.Height = height;
 
-				WindowResizedEvent event = WindowResizedEvent(static_cast<float>(width), static_cast<float>(height));
+				WindowResizedEvent event = WindowResizedEvent(width, height);
 				window.OnEvent(event);
 			});
 

@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Flux/Core/Platform.h"
+#include "Flux/Renderer/Renderer.h"
 
 namespace Flux {
 
@@ -17,6 +18,11 @@ namespace Flux {
 
 		m_Window = Window::Create(spec.Window);
 		m_Window->SetEventCallback(FX_BIND_EVENT_FN(Application::OnEvent));
+
+		Renderer::Init();
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -46,6 +52,13 @@ namespace Flux {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowClosedEvent>(FX_BIND_EVENT_FN(Application::OnWindowClosed));
+
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
+		{
+			if (e.Handled)
+				break;
+			(*it)->OnEvent(e);
+		}
 	}
 
 	void Application::Run()
@@ -62,6 +75,13 @@ namespace Flux {
 			{
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
+
+				m_ImGuiLayer->Begin();
+				{
+					for (Layer* layer : m_LayerStack)
+						layer->OnImGuiRender();
+				}
+				m_ImGuiLayer->End();
 			}
 
 			m_Window->OnUpdate();
@@ -76,6 +96,21 @@ namespace Flux {
 	bool Application::OnWindowClosed(WindowClosedEvent& e)
 	{
 		m_Running = false;
+		return false;
+	}
+
+	bool Application::OnWindowResized(WindowResizedEvent& e)
+	{
+		if (e.GetWidth() == 0 && e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+
+		Renderer::OnWindowResized(e.GetWidth(), e.GetHeight());
+
 		return false;
 	}
 

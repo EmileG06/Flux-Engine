@@ -8,6 +8,9 @@
 #include <chrono>
 #include <source_location>
 #include <functional>
+#include <unordered_map>
+#include <array>
+#include <fstream>
 
 #include <glad/glad.h>
 
