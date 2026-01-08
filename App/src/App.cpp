@@ -1,5 +1,19 @@
+#include <Flux.h>
+#include <Flux/Core/Entrypoint.h>
 
-int main(int argc, char** argv)
+class FluxApp : public Flux::Application
 {
-    return 0;
+public:
+	FluxApp(const Flux::ApplicationSpecification& spec)
+		: Application(spec) {}
+	virtual ~FluxApp() {}
+};
+
+Flux::Application* Flux::CreateApplication()
+{
+	Flux::ApplicationSpecification specification;
+	specification.Title = "FLUX APP";
+	specification.Window.Width = 1280;
+	specification.Window.Height = 720;
+	return new FluxApp(specification);
 }

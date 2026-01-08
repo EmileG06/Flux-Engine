@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <print>
+#include <chrono>
+#include <source_location>
+#include <functional>
 
 #include <glad/glad.h>
 
