@@ -5,6 +5,7 @@
 #include "Flux/Events/Event.h"
 #include "Flux/Events/WindowEvents.h"
 #include "Flux/Core/LayerStack.h"
+#include "Flux/ImGui/ImGuiLayer.h"
 
 namespace Flux {
 
@@ -34,6 +35,7 @@ namespace Flux {
 
 	private:
 		bool OnWindowClosed(WindowClosedEvent& e);
+		bool OnWindowResized(WindowResizedEvent& e);
 
 	private:
 		ApplicationSpecification m_Specification;
@@ -44,6 +46,7 @@ namespace Flux {
 		float m_LastFrameTime = 0.0f;
 
 		LayerStack m_LayerStack;
+		ImGuiLayer* m_ImGuiLayer = nullptr;
 	};
 
 	Application* CreateApplication();

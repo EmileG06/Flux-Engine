@@ -18,12 +18,12 @@ namespace Flux {
 	class WindowResizedEvent : public Event
 	{
 	public:
-		WindowResizedEvent(float width, float height)
+		WindowResizedEvent(uint32_t width, uint32_t height)
 			: m_Width(width), m_Height(height) {
 		}
 
-		float GetWidth() const { return m_Width; }
-		float GetHeight() const { return m_Height; }
+		uint32_t GetWidth() const { return m_Width; }
+		uint32_t GetHeight() const { return m_Height; }
 
 		virtual std::string ToString() const override
 		{
@@ -34,8 +34,8 @@ namespace Flux {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 	private:
-		float m_Width;
-		float m_Height;
+		uint32_t m_Width;
+		uint32_t m_Height;
 	};
 
 }

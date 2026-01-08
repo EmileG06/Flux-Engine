@@ -20,6 +20,7 @@ project "Flux"
 
     defines
     {
+        "_CRT_SECURE_NO_WARNINGS",
         "FX_BUILD_ENGINE"
     }
 
@@ -28,7 +29,8 @@ project "Flux"
         "src/**.h",
         "src/**.cpp",
         "%{Includes.glm}/**.hpp",
-        "%{Includes.glm}/**.inl"
+        "%{Includes.glm}/**.inl",
+        "%{Includes.stb_image}/stb_image.h"
     }
 
     includedirs
@@ -36,14 +38,17 @@ project "Flux"
         "src",
         "%{Includes.glfw}",
         "%{Includes.glad}",
-        "%{Includes.glm}"
+        "%{Includes.glm}",
+        "%{Includes.imgui}",
+        "%{Includes.stb_image}"
     }
 
     links
     {
         "opengl32.lib",
         "glfw",
-        "glad"
+        "glad",
+        "imgui"
     }
 
     filter "system:windows"

@@ -15,6 +15,7 @@ namespace Flux {
 
 		virtual void OnEvent(Event& e) {}
 		virtual void OnUpdate(Timestep ts) {}
+		virtual void OnImGuiRender() {}
 	};
 
 }
