@@ -13,6 +13,8 @@ namespace Flux {
 		fbSpec.Width = 1920;
 		fbSpec.Height = 1080;
 		m_Framebuffer = Flux::Framebuffer::Create(fbSpec);
+
+		m_GrassTexture = Texture2D::Create("assets/textures/grass1.png");
 	}
 
 	EditorLayer::~EditorLayer()
@@ -40,7 +42,7 @@ namespace Flux {
 		
 		Renderer2D::BeginScene(m_Camera);
 
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f });
+		Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_GrassTexture, 2.0f);
 
 		Renderer2D::EndScene();
 
@@ -97,6 +99,18 @@ namespace Flux {
 
 		if (ImGui::Begin("Settings"))
 		{
+			ImGui::End();
+		}
+
+		if (ImGui::Begin("Statistics"))
+		{
+			const auto& lastFrame = Renderer2D::GetLastFrameStats();
+
+			ImGui::Text("Vertex Rendered: %u", lastFrame.VertexRendered);
+			ImGui::Text("Index Rendered: %u", lastFrame.IndexRendered);
+			ImGui::Text("Quad Rendered: %u", lastFrame.QuadRendered);
+			ImGui::Text("Draw Calls: %u", lastFrame.DrawCalls);
+
 			ImGui::End();
 		}
 

@@ -7,6 +7,8 @@ namespace Flux {
 		: m_Specification(spec)
 	{
 		Invalidate();
+
+		FX_CORE_TRACE("Framebuffer created: {0} (size: {1}x{2}, samples: {3})", m_RendererID, spec.Width, spec.Height, spec.Samples);
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()

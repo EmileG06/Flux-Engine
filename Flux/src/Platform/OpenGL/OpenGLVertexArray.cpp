@@ -25,6 +25,7 @@ namespace Flux
     OpenGLVertexArray::OpenGLVertexArray()
     {
         glCreateVertexArrays(1, &m_RendererID);
+        FX_CORE_TRACE("VertexArray created: {0}", m_RendererID);
     }
 
     OpenGLVertexArray::~OpenGLVertexArray()
