@@ -16,6 +16,7 @@ namespace Flux {
 		void Unbind() const override;
 
 		void SetInt(const std::string& name, int32_t value) override;
+		void SetIntArray(const std::string& name, int32_t* values, uint32_t count) override;
 		void SetFloat(const std::string& name, float value) override;
 		void SetFloat2(const std::string& name, const glm::vec2& value) override;
 		void SetFloat3(const std::string& name, const glm::vec3& value) override;
@@ -26,6 +27,7 @@ namespace Flux {
 		const std::string& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const std::string& name, int32_t value);
+		void UploadUniformIntArray(const std::string& name, int32_t* values, uint32_t count);
 
 		void UploadUniformFloat1(const std::string& name, float value);
 		void UploadUniformFloat2(const std::string& name, const glm::vec2& value);

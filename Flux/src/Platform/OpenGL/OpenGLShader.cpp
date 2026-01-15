@@ -22,6 +22,8 @@ namespace Flux {
 		size_t lastDot = filePath.rfind('.');
 		size_t count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
 		m_Name = filePath.substr(lastSlash, count);
+
+		FX_CORE_TRACE("Shader '{0}' created from '{1}': {2}", m_Name, filePath, m_RendererID);
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
@@ -31,6 +33,8 @@ namespace Flux {
 		shaderSources[GL_VERTEX_SHADER] = vertexSrc;
 		shaderSources[GL_FRAGMENT_SHADER] = fragmentSrc;
 		Compile(shaderSources);
+
+		FX_CORE_TRACE("Shader '{0}' created: {1}", name, m_RendererID);
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -51,6 +55,11 @@ namespace Flux {
 	void OpenGLShader::SetInt(const std::string& name, int32_t value)
 	{
 		UploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::SetIntArray(const std::string& name, int32_t* values, uint32_t count)
+	{
+		UploadUniformIntArray(name, values, count);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, float value)
@@ -87,6 +96,12 @@ namespace Flux {
 	{
 		int32_t location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, int32_t* values, uint32_t count)
+	{
+		int32_t location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::UploadUniformFloat1(const std::string& name, float value)
