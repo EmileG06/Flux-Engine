@@ -18,9 +18,9 @@ namespace Flux {
 
 	struct Renderer2DData
 	{
-		const uint32_t MaxQuads = 10000;
-		const uint32_t MaxVertices = MaxQuads * 4;
-		const uint32_t MaxIndices = MaxQuads * 6;
+		static const uint32_t MaxQuads = 10000;
+		static const uint32_t MaxVertices = MaxQuads * 4;
+		static const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32;
 
 		Ref<VertexArray> QuadVertexArray;
@@ -28,7 +28,6 @@ namespace Flux {
 		Ref<Shader> BasicShader;
 		Ref<Texture2D> DefaultTexture;
 
-		uint32_t QuadVertexCount = 0;
 		uint32_t QuadIndexCount = 0;
 
 		QuadVertex* QuadVertexBufferBase = nullptr;
@@ -39,7 +38,7 @@ namespace Flux {
 
 		std::array<glm::vec4, 4> QuadVertexPositions;
 
-		LastFrameStatistics LastFrame;
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DData s_Data;
@@ -109,16 +108,10 @@ namespace Flux {
 		s_Data.BasicShader->Bind();
 		s_Data.BasicShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
-		s_Data.QuadVertexCount = 0;
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
 		s_Data.TextureSlotIndex = 1;
-
-		s_Data.LastFrame.VertexRendered = 0;
-		s_Data.LastFrame.IndexRendered = 0;
-		s_Data.LastFrame.QuadRendered = 0;
-		s_Data.LastFrame.DrawCalls = 0;
 	}
 
 	void Renderer2D::EndScene()
@@ -131,16 +124,19 @@ namespace Flux {
 
 	void Renderer2D::Flush()
 	{
-		s_Data.LastFrame.DrawCalls++;
-
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+
+		s_Data.Stats.DrawCalls++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
+
 		constexpr float texIndex = 0.0f;
 		constexpr float tilingFactor = 1.0f;
 
@@ -175,12 +171,9 @@ namespace Flux {
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexCount += 4;
 		s_Data.QuadIndexCount += 6;
 
-		s_Data.LastFrame.VertexRendered += 4;
-		s_Data.LastFrame.IndexRendered += 6;
-		s_Data.LastFrame.QuadRendered++;
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -190,6 +183,9 @@ namespace Flux {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
 	{
+		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
+
 		constexpr glm::vec4 defaultColor = glm::vec4(1.0f);
 
 		float textureIndex = 0.0f;
@@ -241,12 +237,9 @@ namespace Flux {
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexCount += 4;
 		s_Data.QuadIndexCount += 6;
 
-		s_Data.LastFrame.VertexRendered += 4;
-		s_Data.LastFrame.IndexRendered += 6;
-		s_Data.LastFrame.QuadRendered++;
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
@@ -256,6 +249,9 @@ namespace Flux {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
+		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
+
 		constexpr float texIndex = 0.0f;
 		constexpr float tilingFactor = 1.0f;
 
@@ -290,12 +286,9 @@ namespace Flux {
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexCount += 4;
 		s_Data.QuadIndexCount += 6;
 
-		s_Data.LastFrame.VertexRendered += 4;
-		s_Data.LastFrame.IndexRendered += 6;
-		s_Data.LastFrame.QuadRendered++;
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -305,6 +298,9 @@ namespace Flux {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor)
 	{
+		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
+			FlushAndReset();
+
 		constexpr glm::vec4 defaultColor = glm::vec4(1.0f);
 
 		float textureIndex = 0.0f;
@@ -357,12 +353,9 @@ namespace Flux {
 		s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexCount += 4;
 		s_Data.QuadIndexCount += 6;
 
-		s_Data.LastFrame.VertexRendered += 4;
-		s_Data.LastFrame.IndexRendered += 6;
-		s_Data.LastFrame.QuadRendered++;
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor)
@@ -370,9 +363,24 @@ namespace Flux {
 		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor);
 	}
 
-	const LastFrameStatistics& Renderer2D::GetLastFrameStats()
+	Renderer2D::Statistics Renderer2D::GetStats()
 	{
-		return s_Data.LastFrame;
+		return s_Data.Stats;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		std::memset(&s_Data.Stats, 0, sizeof(s_Data.Stats));
+	}
+
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureSlotIndex = 1;
 	}
 
 }

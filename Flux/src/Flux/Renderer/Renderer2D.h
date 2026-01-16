@@ -6,14 +6,6 @@
 
 namespace Flux {
 
-	struct LastFrameStatistics
-	{
-		uint32_t VertexRendered;
-		uint32_t IndexRendered;
-		uint32_t QuadRendered;
-		uint32_t DrawCalls;
-	};
-
 	class Renderer2D
 	{
 	public:
@@ -34,7 +26,20 @@ namespace Flux {
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 
-		static const LastFrameStatistics& GetLastFrameStats();
+		struct Statistics
+		{
+			uint32_t DrawCalls = 0;
+			uint32_t QuadCount = 0;
+
+			uint32_t GetTotalVertexCount() const { return QuadCount * 4; }
+			uint32_t GetTotalIndexCount() const { return QuadCount * 6; }
+		};
+
+		static Statistics GetStats();
+		static void ResetStats();
+
+	private:
+		static void FlushAndReset();
 	};
 
 }
