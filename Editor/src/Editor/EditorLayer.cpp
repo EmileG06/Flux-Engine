@@ -35,6 +35,8 @@ namespace Flux {
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
+		Renderer2D::ResetStats();
+
 		m_Framebuffer->Bind();
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -104,12 +106,12 @@ namespace Flux {
 
 		if (ImGui::Begin("Statistics"))
 		{
-			const auto& lastFrame = Renderer2D::GetLastFrameStats();
+			const auto& lastFrame = Renderer2D::GetStats();
 
-			ImGui::Text("Vertex Rendered: %u", lastFrame.VertexRendered);
-			ImGui::Text("Index Rendered: %u", lastFrame.IndexRendered);
-			ImGui::Text("Quad Rendered: %u", lastFrame.QuadRendered);
 			ImGui::Text("Draw Calls: %u", lastFrame.DrawCalls);
+			ImGui::Text("Quads: %u", lastFrame.QuadCount);
+			ImGui::Text("Vertices: %u", lastFrame.GetTotalVertexCount());
+			ImGui::Text("Indices: %u", lastFrame.GetTotalIndexCount());
 
 			ImGui::End();
 		}
