@@ -16,3 +16,6 @@ bin/
 *.lib
 *.pdb
 *.ilk
+
+# ImGui Files
+imgui.ini
