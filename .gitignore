@@ -6,6 +6,7 @@
 
 # Visual Studio Folderrs
 .vs/
+.vscode/
 
 # Project Folders
 bin/
