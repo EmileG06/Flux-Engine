@@ -42,7 +42,7 @@ namespace Flux {
 		
 		Renderer2D::BeginScene(m_Camera);
 
-		Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_GrassTexture, 2.0f);
+		Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_GrassTexture, 2.0f);
 
 		Renderer2D::EndScene();
 
