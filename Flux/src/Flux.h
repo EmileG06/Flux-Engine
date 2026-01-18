@@ -38,12 +38,16 @@
 
 #include "Flux/Renderer/Renderer.h"
 #include "Flux/Renderer/Renderer2D.h"
+#include "Flux/Renderer/Renderer3D.h"
 
 #include "Flux/Renderer/VertexArray.h"
 #include "Flux/Renderer/Buffers.h"
 #include "Flux/Renderer/Shader.h"
 #include "Flux/Renderer/Texture.h"
 #include "Flux/Renderer/Framebuffer.h"
+
+#include "Flux/Renderer/OrthographicCamera.h"
+#include "Flux/Renderer/PerspectiveCamera.h"
 
 // -----------------------
 // --- GLM ---------------

@@ -2,7 +2,6 @@
 #include "Application.h"
 
 #include "Flux/Core/Platform.h"
-#include "Flux/Renderer/Renderer.h"
 
 namespace Flux {
 
@@ -19,7 +18,7 @@ namespace Flux {
 		m_Window = Window::Create(spec.Window);
 		m_Window->SetEventCallback(FX_BIND_EVENT_FN(Application::OnEvent));
 
-		Renderer::Init();
+		Renderer::Init(m_Specification.Renderer);
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);

@@ -6,6 +6,7 @@
 #include "Flux/Events/WindowEvents.h"
 #include "Flux/Core/LayerStack.h"
 #include "Flux/ImGui/ImGuiLayer.h"
+#include "Flux/Renderer/Renderer.h"
 
 namespace Flux {
 
@@ -13,6 +14,7 @@ namespace Flux {
 	{
 		std::string Title = "Flux Application";
 		WindowSpecification Window;
+		RendererType Renderer;
 	};
 
 	class Application

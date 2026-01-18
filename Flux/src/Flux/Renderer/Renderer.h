@@ -5,10 +5,17 @@
 
 namespace Flux {
 
+	enum class RendererType
+	{
+		None = 0,
+		Renderer2D,
+		Renderer3D
+	};
+
 	class Renderer
 	{
 	public:
-		static void Init();
+		static void Init(RendererType type);
 		static void Shutdown();
 
 		static void OnWindowResized(uint32_t width, uint32_t height);

@@ -1,4 +1,4 @@
-// FlatColor Shader
+// Basic Shader
 
 #type vertex
 #version 460 core
