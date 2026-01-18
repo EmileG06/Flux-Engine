@@ -52,3 +52,4 @@ Use VS2022 minimum
 - [The Cherno](https://www.youtube.com/@TheCherno)
 - [LearnOpenGL](https://learnopengl.com/)
 - [OGLDEV](https://www.youtube.com/@OGLDEV)
+- [PirateSoftware](https://youtu.be/Aq5WXmQQooo)
