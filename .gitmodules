@@ -3,4 +3,10 @@
 	url = https://github.com/EmileG06/glfw
 [submodule "Flux/vendor/glad"]
 	path = Flux/vendor/glad
-	url = https://github.com/EmileG06/GLAD
+	url = https://github.com/EmileG06/glad
+[submodule "Flux/vendor/imgui"]
+	path = Flux/vendor/imgui
+	url = https://github.com/EmileG06/ImGuiPremake
+[submodule "Flux/vendor/glm"]
+	path = Flux/vendor/glm
+	url = https://github.com/g-truc/glm

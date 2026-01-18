@@ -15,7 +15,7 @@ workspace "FluxEngine"
     Includes = {}
     Includes["glfw"] = "%{wks.location}/Flux/vendor/glfw/include"
     Includes["glad"] = "%{wks.location}/Flux/vendor/glad/include"
-    Includes["glm"] = "%{wks.location}/Flux/vendor/glm/include"
+    Includes["glm"] = "%{wks.location}/Flux/vendor/glm"
     Includes["imgui"] = "%{wks.location}/Flux/vendor/imgui"
     Includes["stb_image"] = "%{wks.location}/Flux/vendor/stb_image/include"
     Includes["tinygltf"] = "%{wks.location}/Flux/vendor/tinygltf"

@@ -8,7 +8,7 @@ project "Flux"
     systemversion "latest"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin/int/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin/" .. outputdir .. "/%{prj.name}/int")
 
     pchheader "FXPch.h"
     pchsource "src/FXPch.cpp"
