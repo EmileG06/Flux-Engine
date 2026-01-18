@@ -31,6 +31,9 @@
 # Clone the repository
 git clone https://github.com/EmileG06/Flux-Engine.git --recursive
 
+# Premake5
+I didn't include the premake5 binaries in the repo, you will have to download it manually and place it in 'Flux-Engine/vendor/premake5/bin/premake5.exe'
+
 # Generate solution files
 run Generate.bat in the scripts folder
 
