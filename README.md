@@ -50,3 +50,5 @@ Use VS2022 minimum
 - [stb_image](https://github.com/nothings/stb)
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [The Cherno](https://www.youtube.com/@TheCherno)
+- [LearnOpenGL](https://learnopengl.com/)
+- [OGLDEV](https://www.youtube.com/@OGLDEV)
