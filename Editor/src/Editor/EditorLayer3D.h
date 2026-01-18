@@ -22,6 +22,7 @@ namespace Flux {
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
 
 		PerspectiveCamera m_Camera;
+		float m_CameraSpeed = 2.5f;
 
 		glm::vec3 m_CubePosition = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_CubeRotation = { 0.0f, 0.0f, 0.0f };
