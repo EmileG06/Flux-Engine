@@ -40,7 +40,8 @@ project "Flux"
         "%{Includes.glad}",
         "%{Includes.glm}",
         "%{Includes.imgui}",
-        "%{Includes.stb_image}"
+        "%{Includes.stb_image}",
+        "%{Includes.tinygltf}"
     }
 
     links
