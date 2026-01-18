@@ -4,7 +4,7 @@
 #include "Editor/EditorLayer.h"
 #include "Editor/EditorLayer3D.h"
 
-#define USE_RENDERER_3D 1
+#define USE_RENDERER_3D 0
 
 class FluxEditor : public Flux::Application
 {
@@ -12,10 +12,10 @@ public:
 	FluxEditor(const Flux::ApplicationSpecification& spec)
 		: Application(spec)
 	{
-#ifndef USE_RENDERER_3D
-		PushLayer(new Flux::EditorLayer());
+#if USE_RENDERER_3D
+		PushLayer<Flux::EditorLayer3D>();
 #else
-		PushLayer(new Flux::EditorLayer3D());
+		PushLayer<Flux::EditorLayer>();
 #endif
 	}
 };
@@ -26,10 +26,10 @@ Flux::Application* Flux::CreateApplication()
 	specification.Title = "Flux Editor";
 	specification.Window.Width = 1920;
 	specification.Window.Height = 1080;
-#ifndef USE_RENDERER_3D
-	specification.Renderer = RendererType::Renderer2D;
-#else
+#if USE_RENDERER_3D
 	specification.Renderer = RendererType::Renderer3D;
+#else
+	specification.Renderer = RendererType::Renderer2D;
 #endif
 	return new FluxEditor(specification);
 }

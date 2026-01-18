@@ -31,7 +31,7 @@ namespace Flux {
 		uint32_t GetActiveWidgetID() const;
 
 	private:
-		bool m_BlockEvents = false;
+		bool m_BlockEvents = true;
 	};
 
 }

@@ -21,6 +21,7 @@ namespace Flux {
 		Renderer::Init(m_Specification.Renderer);
 
 		m_ImGuiLayer = new ImGuiLayer();
+		m_ImGuiLayer->BlockEvents(false);
 		PushOverlay(m_ImGuiLayer);
 	}
 

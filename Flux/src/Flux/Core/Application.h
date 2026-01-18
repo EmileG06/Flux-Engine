@@ -25,6 +25,20 @@ namespace Flux {
 
 		static Application& Get();
 
+		template <typename T>
+		requires(std::is_base_of_v<Layer, T>)
+		void PushLayer()
+		{
+			PushLayer(new T());
+		}
+
+		template <typename T>
+		requires(std::is_base_of_v<Layer, T>)
+		void PushOverlay()
+		{
+			PushOverlay(new T());
+		}
+
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
