@@ -49,6 +49,7 @@ Use VS2022 minimum
 - [GLM](https://github.com/g-truc/glm)
 - [stb_image](https://github.com/nothings/stb)
 - [Dear ImGui](https://github.com/ocornut/imgui)
+- [tinygltf](https://github.com/syoyo/tinygltf)
 - [The Cherno](https://www.youtube.com/@TheCherno)
 - [LearnOpenGL](https://learnopengl.com/)
 - [OGLDEV](https://www.youtube.com/@OGLDEV)
