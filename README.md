@@ -6,18 +6,18 @@ This project is used as a learning experience, expect some questionable code =).
 ## Features
 
 **Graphics & Rendering**
-- OpenGL 4.6 Core for modern, efficient rendering
-- Batch renderer for optimized draw call performance
-- Platform-agnostic design for cross-platform compatibility
+- OpenGL 4.6 Core
+- Batch renderer for 2D Quads
+- Platform-agnostic-ish design for eventual cross-platform compatibility
 
 **Architecture**
-- Layer-based system for organized scene management
-- Event-driven architecture for responsive input and system communication
-- ImGui integration with dockspace support for powerful editor UI
+- Layer/overlay system for organization and some scalability
+- Event-driven architecture for input
+- ImGui with dockspace support for editor UI (also useful for some debugging)
 
 **Modern C++**
-- Built with C++23 for cutting-edge language features
-- Clean, maintainable codebase following modern best practices
+- Built with C++23 because std::println
+- Clean, maintainable codebase following modern best practices (I'm trying)
 
 ## Requirements
 
@@ -37,16 +37,6 @@ run Generate.bat in the scripts folder
 # Open solution and build
 Use VS2022 minimum
 ```
-
-## Architecture Overview
-
-**Layer System**: Organize your application into modular layers that can be pushed and popped from the layer stack. Each layer receives update, render, and event callbacks.
-
-**Event System**: A flexible event dispatcher that propagates events through the layer stack, supporting event blocking and filtering.
-
-**Batch Renderer**: Automatically batches draw calls to minimize state changes and maximize rendering performance.
-
-**ImGui Editor**: Built-in dockable ImGui interface for creating custom editor tools and debug visualizations.
 
 ## Acknowledgments
 
