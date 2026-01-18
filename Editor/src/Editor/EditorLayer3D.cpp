@@ -29,6 +29,8 @@ namespace Flux {
 
 	void EditorLayer3D::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<MouseMovedEvent>(FX_BIND_EVENT_FN(EditorLayer3D::OnMouseMoved));
 	}
 
 	void EditorLayer3D::OnUpdate(Timestep ts)
@@ -43,6 +45,10 @@ namespace Flux {
 			position += m_Camera.GetViewForward() * movementOffset;
 		else if (Input::IsKeyPressed(FX_KEY_S))
 			position -= m_Camera.GetViewForward() * movementOffset;
+		if (Input::IsKeyPressed(FX_KEY_SPACE))
+			position += m_Camera.GetViewUp() * movementOffset;
+		else if (Input::IsKeyPressed(FX_KEY_Q))
+			position -= m_Camera.GetViewUp() * movementOffset;
 		m_Camera.SetPosition(position);
 
 		Renderer2D::ResetStats();
@@ -169,6 +175,41 @@ namespace Flux {
 		ImGui::PopStyleVar();
 
 		ImGui::End();
+	}
+
+	bool EditorLayer3D::OnMouseMoved(MouseMovedEvent& event)
+	{
+		if (m_FirstMouse)
+		{
+			m_LastX = event.GetX();
+			m_LastY = event.GetY();
+			m_FirstMouse = false;
+		}
+
+		float xOffset = event.GetX() - m_LastX;
+		float yOffset = m_LastY - event.GetY();
+
+		m_LastX = event.GetX();
+		m_LastY = event.GetY();
+
+		xOffset *= m_MouseSensitivity;
+		yOffset *= m_MouseSensitivity;
+
+		if (Input::IsMousePressed(FX_MOUSE_BUTTON_2))
+		{
+			glm::vec3 cameraRotation = m_Camera.GetRotation();
+			cameraRotation.x += yOffset;
+			cameraRotation.y += xOffset;
+
+			if (cameraRotation.x > 89.0f)
+				cameraRotation.x = 89.0f;
+			if (cameraRotation.x < -89.0f)
+				cameraRotation.x = -89.0f;
+
+			m_Camera.SetRotation(cameraRotation);
+		}
+
+		return false;
 	}
 
 }
