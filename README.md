@@ -1,6 +1,7 @@
 # Flux-Engine
 
-A modern, high-performance 2D game engine built with OpenGL 4.6 Core and C++23.
+A modern, high-performance 2D and 3D game engine built with OpenGL 4.6 Core and C++23.
+This project is used as a learning experience, expect some questionable code =).
 
 ## Features
 
