@@ -20,9 +20,9 @@ A modern, high-performance 2D game engine built with OpenGL 4.6 Core and C++23.
 
 ## Requirements
 
-- C++23 compatible compiler (GCC 13+, Clang 16+, or MSVC 2022+)
+- Visual Studio 2022
 - OpenGL 4.6 capable GPU
-- CMake 3.20 or higher (recommended)
+- Premake5
 
 ## Building
 
