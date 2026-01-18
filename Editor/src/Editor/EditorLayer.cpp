@@ -35,6 +35,17 @@ namespace Flux {
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
+		glm::vec3 position = m_Camera.GetPosition();
+		if (Input::IsKeyPressed(FX_KEY_D))
+			position.x += m_CameraMoveSpeed * ts.GetSeconds();
+		else if (Input::IsKeyPressed(FX_KEY_A))
+			position.x -= m_CameraMoveSpeed * ts.GetSeconds();
+		if (Input::IsKeyPressed(FX_KEY_W))
+			position.y += m_CameraMoveSpeed * ts.GetSeconds();
+		else if (Input::IsKeyPressed(FX_KEY_S))
+			position.y -= m_CameraMoveSpeed * ts.GetSeconds();
+		m_Camera.SetPosition(position);
+
 		Renderer2D::ResetStats();
 
 		m_Framebuffer->Bind();

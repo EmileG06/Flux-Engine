@@ -22,6 +22,7 @@ namespace Flux {
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
 
 		OrthographicCamera m_Camera;
+		float m_CameraMoveSpeed = 2.5f;
 
 		Ref<Texture2D> m_GrassTexture;
 	};
