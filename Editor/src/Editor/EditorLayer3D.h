@@ -25,11 +25,6 @@ namespace Flux {
 		PerspectiveCameraController m_CameraController;
 
 		Ref<Scene> m_ActiveScene;
-		Entity m_CubeEntity;
-
-		glm::vec3 m_CubePosition = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 m_CubeRotation = { 0.0f, 0.0f, 0.0f };
-		glm::vec4 m_CubeColor = { 0.8f, 0.2f, 0.3f, 1.0f };
 	};
 
 }

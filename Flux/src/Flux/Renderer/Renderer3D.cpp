@@ -95,4 +95,14 @@ namespace Flux {
 		RenderCommand::DrawIndexed(s_Data.CubeVertexArray);
 	}
 
+	void Renderer3D::DrawMesh(const Mesh& mesh, const glm::mat4& transform, const glm::vec4& color)
+	{
+		s_Data.CubeShader->Bind();
+		s_Data.CubeShader->SetMat4("u_Transform", transform);
+		s_Data.CubeShader->SetFloat4("u_Color", color);
+
+		mesh.GetVertexArray()->Bind();
+		RenderCommand::DrawIndexed(mesh.GetVertexArray());
+	}
+
 }

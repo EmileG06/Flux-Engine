@@ -15,7 +15,6 @@ namespace Flux {
 		m_Framebuffer = Flux::Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = CreateRef<Scene>();
-		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
 	}
 
 	EditorLayer3D::~EditorLayer3D()
@@ -49,20 +48,6 @@ namespace Flux {
 		RenderCommand::Clear();
 
 		Renderer3D::BeginScene(m_CameraController.GetCamera());
-
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition)
-		//	* glm::mat4_cast(glm::quat(glm::radians(m_CubeRotation)))
-		//	* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
-
-		//Renderer3D::DrawCube(transform, m_CubeColor);
-
-
-		if (m_CubeEntity)
-		{
-			auto& transform = m_CubeEntity.GetComponent<TransformComponent>();
-			Renderer3D::DrawCube(transform, m_CubeColor);
-		}
-
 
 		Renderer3D::EndScene();
 
@@ -119,10 +104,6 @@ namespace Flux {
 
 		if (ImGui::Begin("Settings"))
 		{
-			ImGui::DragFloat3("Cube Position", glm::value_ptr(m_CubePosition), 0.05f, -10.0f, 10.0f);
-			ImGui::DragFloat3("Cube Rotation", glm::value_ptr(m_CubeRotation), 1.0f, -180.0f, 180.0f);
-			ImGui::ColorEdit4("Cube Color", glm::value_ptr(m_CubeColor));
-
 			ImGui::End();
 		}
 

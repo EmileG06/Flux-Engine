@@ -45,6 +45,7 @@
 #include "Flux/Renderer/Shader.h"
 #include "Flux/Renderer/Texture.h"
 #include "Flux/Renderer/Framebuffer.h"
+#include "Flux/Renderer/Mesh.h"
 
 #include "Flux/Renderer/OrthographicCamera.h"
 #include "Flux/Renderer/PerspectiveCamera.h"
@@ -57,6 +58,13 @@
 #include "Flux/Scene/Entity.h"
 #include "Flux/Scene/Scene.h"
 #include "Flux/Scene/Components.h"
+
+// -----------------------
+// --- Assets ------------
+// -----------------------
+
+#include "Flux/Assets/AssetHandle.h"
+#include "Flux/Assets/AssetManager.h"
 
 // -----------------------
 // --- GLM ---------------

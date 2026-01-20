@@ -2,6 +2,7 @@
 
 #include "Flux/Core.h"
 #include "Flux/Renderer/PerspectiveCamera.h"
+#include "Flux/Renderer/Mesh.h"
 
 namespace Flux {
 
@@ -15,6 +16,8 @@ namespace Flux {
 		static void EndScene();
 
 		static void DrawCube(const glm::mat4& transform, const glm::vec4& color);
+
+		static void DrawMesh(const Mesh& mesh, const glm::mat4& transform, const glm::vec4& color);
 	};
 
 }
