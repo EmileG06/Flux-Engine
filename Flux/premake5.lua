@@ -41,7 +41,8 @@ project "Flux"
         "%{Includes.glm}",
         "%{Includes.imgui}",
         "%{Includes.stb_image}",
-        "%{Includes.tinygltf}"
+        "%{Includes.tinygltf}",
+        "%{Includes.entt}"
     }
 
     links

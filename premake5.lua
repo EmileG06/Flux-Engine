@@ -19,6 +19,7 @@ workspace "FluxEngine"
     Includes["imgui"] = "%{wks.location}/Flux/vendor/imgui"
     Includes["stb_image"] = "%{wks.location}/Flux/vendor/stb_image/include"
     Includes["tinygltf"] = "%{wks.location}/Flux/vendor/tinygltf"
+    Includes["entt"] = "%{wks.location}/Flux/vendor/entt"
 
     group "Dependencies"
         include "Flux/vendor/glfw"
