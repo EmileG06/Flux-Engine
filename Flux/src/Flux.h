@@ -51,6 +51,14 @@
 #include "Flux/Renderer/PerspectiveCameraController.h"
 
 // -----------------------
+// --- Scene -------------
+// -----------------------
+
+#include "Flux/Scene/Entity.h"
+#include "Flux/Scene/Scene.h"
+#include "Flux/Scene/Components.h"
+
+// -----------------------
 // --- GLM ---------------
 // -----------------------
 

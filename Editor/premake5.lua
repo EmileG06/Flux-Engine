@@ -32,7 +32,8 @@ project "Editor"
         "src",
         "../Flux/src",
         "../Flux/vendor",
-        "%{Includes.glm}"
+        "%{Includes.glm}",
+        "%{Includes.entt}"
     }
 
     links
