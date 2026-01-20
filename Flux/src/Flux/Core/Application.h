@@ -47,6 +47,8 @@ namespace Flux {
 		void Run();
 		void Stop();
 
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+
 		Scope<Window>& GetWindow() { return m_Window; }
 
 	private:

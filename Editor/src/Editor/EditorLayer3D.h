@@ -20,6 +20,7 @@ namespace Flux {
 	private:
 		Ref<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
+		bool m_ViewportFocused = false;
 
 		PerspectiveCameraController m_CameraController;
 

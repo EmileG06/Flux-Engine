@@ -29,12 +29,14 @@ namespace Flux {
 
 	void EditorLayer3D::OnEvent(Event& event)
 	{
-		m_CameraController.OnEvent(event);
+		if (m_ViewportFocused)
+			m_CameraController.OnEvent(event);
 	}
 
 	void EditorLayer3D::OnUpdate(Timestep ts)
 	{
-		m_CameraController.OnUpdate(ts);
+		if (m_ViewportFocused)
+			m_CameraController.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
 
@@ -119,12 +121,11 @@ namespace Flux {
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-		if (ImGui::Begin("Viewport"))
+		ImGui::Begin("Viewport");
 		{
-			bool isFocused = ImGui::IsWindowFocused();
-			bool isHovered = ImGui::IsWindowHovered();
-			FX_CORE_WARN("Focused: {0}", isFocused);
-			FX_CORE_WARN("Hovered: {0}", isHovered);
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused);
+
 			glm::vec2 viewportPanelSize = glm::vec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 			if (m_ViewportSize != viewportPanelSize)
 			{
