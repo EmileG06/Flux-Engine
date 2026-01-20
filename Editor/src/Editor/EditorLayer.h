@@ -20,11 +20,11 @@ namespace Flux {
 	private:
 		Ref<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
+		bool m_ViewportFocused = false;
 
-		OrthographicCamera m_Camera;
-		float m_CameraMoveSpeed = 2.5f;
-
-		Ref<Texture2D> m_GrassTexture;
+		Ref<Scene> m_ActiveScene;
+		Entity m_CameraEntity;
+		Entity m_CubeEntity;
 	};
 
 }

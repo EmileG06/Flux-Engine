@@ -1,20 +1,92 @@
 #include "EditorLayer.h"
 
 #include <Flux/Renderer/RenderCommand.h>
-#include <Flux/Renderer/Renderer2D.h>
+#include <Flux/Renderer/Renderer3D.h>
 #include <ImGui/ImGui.h>
 
 namespace Flux {
 
 	EditorLayer::EditorLayer()
-		: m_Camera(-1.778f, 1.778f, -1.0f, 1.0f)
 	{
 		Flux::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1920;
 		fbSpec.Height = 1080;
 		m_Framebuffer = Flux::Framebuffer::Create(fbSpec);
 
-		m_GrassTexture = Texture2D::Create("assets/textures/grass1.png");
+		m_ActiveScene = CreateRef<Scene>();
+
+		std::vector<Vertex3D> vertices = {
+			{ { -0.5f, -0.5f,  0.5f } },
+			{ {  0.5f, -0.5f,  0.5f } },
+			{ {  0.5f,  0.5f,  0.5f } },
+			{ { -0.5f,  0.5f,  0.5f } },
+			{ { -0.5f, -0.5f, -0.5f } },
+			{ {  0.5f, -0.5f, -0.5f } },
+			{ {  0.5f,  0.5f, -0.5f } },
+			{ { -0.5f,  0.5f, -0.5f } }
+		};
+
+		std::vector<uint32_t> indices = {
+			0, 1, 2,
+			2, 3, 0,
+			1, 5, 6,
+			6, 2, 1,
+			5, 4, 7,
+			7, 6, 5,
+			4, 0, 3,
+			3, 7, 4,
+			3, 2, 6,
+			6, 7, 3,
+			4, 5, 1,
+			1, 0, 4
+		};
+
+		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
+		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::CreateMesh(vertices, indices));
+
+		class CameraController : public ScriptableEntity
+		{
+		protected:
+			void OnCreate() override
+			{
+
+			}
+
+			void OnDestroy() override
+			{
+
+			}
+
+			void OnUpdate(Timestep ts) override
+			{
+				auto& cameraComp = GetComponent<CameraComponent>();
+				float movementOffset = m_CameraSpeed * ts.GetSeconds();
+
+				if (Input::IsKeyPressed(FX_KEY_D))
+					cameraComp.Position -= cameraComp.ViewRight * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_A))
+					cameraComp.Position += cameraComp.ViewRight * movementOffset;
+
+				if (Input::IsKeyPressed(FX_KEY_W))
+					cameraComp.Position += cameraComp.ViewForward * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_S))
+					cameraComp.Position -= cameraComp.ViewForward * movementOffset;
+
+				if (Input::IsKeyPressed(FX_KEY_SPACE))
+					cameraComp.Position += cameraComp.ViewUp * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_Q))
+					cameraComp.Position -= cameraComp.ViewUp * movementOffset;
+
+				cameraComp.Update();
+			}
+
+		private:
+			float m_CameraSpeed = 2.5f;
+		};
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
+		m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	EditorLayer::~EditorLayer()
@@ -31,33 +103,36 @@ namespace Flux {
 
 	void EditorLayer::OnEvent(Event& event)
 	{
+		m_ActiveScene->OnEvent(event);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
-		glm::vec3 position = m_Camera.GetPosition();
-		if (Input::IsKeyPressed(FX_KEY_D))
-			position.x += m_CameraMoveSpeed * ts.GetSeconds();
-		else if (Input::IsKeyPressed(FX_KEY_A))
-			position.x -= m_CameraMoveSpeed * ts.GetSeconds();
-		if (Input::IsKeyPressed(FX_KEY_W))
-			position.y += m_CameraMoveSpeed * ts.GetSeconds();
-		else if (Input::IsKeyPressed(FX_KEY_S))
-			position.y -= m_CameraMoveSpeed * ts.GetSeconds();
-		m_Camera.SetPosition(position);
+		if (m_CubeEntity)
+		{
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
+				* glm::rotate(glm::mat4(1.0f), Platform::GetTime(), glm::vec3(0.0f, 1.0f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 
-		Renderer2D::ResetStats();
+			auto& transformComp = m_CubeEntity.GetComponent<TransformComponent>();
+			transformComp.Transform = transform;
+		}
 
 		m_Framebuffer->Bind();
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
-		
-		Renderer2D::BeginScene(m_Camera);
 
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_GrassTexture, 2.0f);
+		if (m_CameraEntity)
+		{
+			auto& cameraComp = m_CameraEntity.GetComponent<CameraComponent>();
 
-		Renderer2D::EndScene();
+			Renderer3D::BeginScene(cameraComp.GetViewProjectionMatrix());
+
+			m_ActiveScene->OnUpdate(ts);
+
+			Renderer3D::EndScene();
+		}
 
 		m_Framebuffer->Unbind();
 	}
@@ -117,25 +192,21 @@ namespace Flux {
 
 		if (ImGui::Begin("Statistics"))
 		{
-			const auto& lastFrame = Renderer2D::GetStats();
-
-			ImGui::Text("Draw Calls: %u", lastFrame.DrawCalls);
-			ImGui::Text("Quads: %u", lastFrame.QuadCount);
-			ImGui::Text("Vertices: %u", lastFrame.GetTotalVertexCount());
-			ImGui::Text("Indices: %u", lastFrame.GetTotalIndexCount());
-
 			ImGui::End();
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-		if (ImGui::Begin("Viewport"))
+		ImGui::Begin("Viewport");
 		{
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused);
+
 			glm::vec2 viewportPanelSize = glm::vec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 			if (m_ViewportSize != viewportPanelSize)
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-				m_Camera.SetProjection(-aspectRatio, aspectRatio, -1.0f, 1.0f);
+				m_ActiveScene->OnViewportResized((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();
