@@ -7,7 +7,7 @@
 namespace Flux {
 
 	EditorLayer3D::EditorLayer3D()
-		: m_Camera(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
+		: m_CameraController(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
 	{
 		Flux::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1920;
@@ -29,27 +29,12 @@ namespace Flux {
 
 	void EditorLayer3D::OnEvent(Event& event)
 	{
-		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<MouseMovedEvent>(FX_BIND_EVENT_FN(EditorLayer3D::OnMouseMoved));
+		m_CameraController.OnEvent(event);
 	}
 
 	void EditorLayer3D::OnUpdate(Timestep ts)
 	{
-		float movementOffset = m_CameraSpeed * ts.GetSeconds();
-		glm::vec3 position = m_Camera.GetPosition();
-		if (Input::IsKeyPressed(FX_KEY_D))
-			position -= m_Camera.GetViewRight() * movementOffset;
-		else if (Input::IsKeyPressed(FX_KEY_A))
-			position += m_Camera.GetViewRight() * movementOffset;
-		if (Input::IsKeyPressed(FX_KEY_W))
-			position += m_Camera.GetViewForward() * movementOffset;
-		else if (Input::IsKeyPressed(FX_KEY_S))
-			position -= m_Camera.GetViewForward() * movementOffset;
-		if (Input::IsKeyPressed(FX_KEY_SPACE))
-			position += m_Camera.GetViewUp() * movementOffset;
-		else if (Input::IsKeyPressed(FX_KEY_Q))
-			position -= m_Camera.GetViewUp() * movementOffset;
-		m_Camera.SetPosition(position);
+		m_CameraController.OnUpdate(ts);
 
 		Renderer2D::ResetStats();
 
@@ -58,7 +43,7 @@ namespace Flux {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		Renderer3D::BeginScene(m_Camera);
+		Renderer3D::BeginScene(m_CameraController.GetCamera());
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition)
 			* glm::mat4_cast(glm::quat(glm::radians(m_CubeRotation)))
@@ -130,33 +115,22 @@ namespace Flux {
 
 		if (ImGui::Begin("Statistics"))
 		{
-			const auto& position = m_Camera.GetPosition();
-			ImGui::Text("Camera Position: %.3f, %.3f, %.3f", position.x, position.y, position.z);
-
-			const auto& rotation = m_Camera.GetRotation();
-			ImGui::Text("Camera Rotation: %.3f, %.3f, %.3f", rotation.x, rotation.y, rotation.z);
-
-			const auto& forward = m_Camera.GetViewForward();
-			ImGui::Text("Camera Forward: %.3f, %.3f, %.3f", forward.x, forward.y, forward.z);
-
-			const auto& right = m_Camera.GetViewRight();
-			ImGui::Text("Camera Right: %.3f, %.3f, %.3f", right.x, right.y, right.z);
-
-			const auto& up = m_Camera.GetViewUp();
-			ImGui::Text("Camera Up: %.3f, %.3f, %.3f", up.x, up.y, up.z);
-
 			ImGui::End();
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
 		if (ImGui::Begin("Viewport"))
 		{
+			bool isFocused = ImGui::IsWindowFocused();
+			bool isHovered = ImGui::IsWindowHovered();
+			FX_CORE_WARN("Focused: {0}", isFocused);
+			FX_CORE_WARN("Hovered: {0}", isHovered);
 			glm::vec2 viewportPanelSize = glm::vec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 			if (m_ViewportSize != viewportPanelSize)
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-				m_Camera.SetProjection(45.0f, aspectRatio, 0.1f, 1000.0f);
+				m_CameraController.SetProjection(45.0f, aspectRatio, 0.1f, 1000.0f);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();
@@ -166,41 +140,6 @@ namespace Flux {
 		ImGui::PopStyleVar();
 
 		ImGui::End();
-	}
-
-	bool EditorLayer3D::OnMouseMoved(MouseMovedEvent& event)
-	{
-		if (m_FirstMouse)
-		{
-			m_LastX = event.GetX();
-			m_LastY = event.GetY();
-			m_FirstMouse = false;
-		}
-
-		float xOffset = event.GetX() - m_LastX;
-		float yOffset = m_LastY - event.GetY();
-
-		m_LastX = event.GetX();
-		m_LastY = event.GetY();
-
-		xOffset *= m_MouseSensitivity;
-		yOffset *= m_MouseSensitivity;
-
-		if (Input::IsMousePressed(FX_MOUSE_BUTTON_2))
-		{
-			glm::vec3 cameraRotation = m_Camera.GetRotation();
-			cameraRotation.x += yOffset;
-			cameraRotation.y += xOffset;
-
-			if (cameraRotation.x > 89.0f)
-				cameraRotation.x = 89.0f;
-			if (cameraRotation.x < -89.0f)
-				cameraRotation.x = -89.0f;
-
-			m_Camera.SetRotation(cameraRotation);
-		}
-
-		return false;
 	}
 
 }

@@ -18,17 +18,10 @@ namespace Flux {
 		void OnImGuiRender() override;
 
 	private:
-		bool OnMouseMoved(MouseMovedEvent& event);
-
-	private:
 		Ref<Framebuffer> m_Framebuffer;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
 
-		PerspectiveCamera m_Camera;
-		float m_CameraSpeed = 2.5f;
-		float m_MouseSensitivity = 0.1f;
-		float m_LastX = 0.0f, m_LastY = 0.0f;
-		bool m_FirstMouse = true;
+		PerspectiveCameraController m_CameraController;
 
 		glm::vec3 m_CubePosition = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_CubeRotation = { 0.0f, 0.0f, 0.0f };

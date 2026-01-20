@@ -48,6 +48,7 @@
 
 #include "Flux/Renderer/OrthographicCamera.h"
 #include "Flux/Renderer/PerspectiveCamera.h"
+#include "Flux/Renderer/PerspectiveCameraController.h"
 
 // -----------------------
 // --- GLM ---------------

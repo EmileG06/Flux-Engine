@@ -25,6 +25,9 @@ namespace Flux {
 
 		static Application& Get();
 
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
+
 		template <typename T>
 		requires(std::is_base_of_v<Layer, T>)
 		void PushLayer()
@@ -38,9 +41,6 @@ namespace Flux {
 		{
 			PushOverlay(new T());
 		}
-
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
 
 		void OnEvent(Event& e);
 
