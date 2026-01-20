@@ -75,10 +75,15 @@ namespace Flux {
 	{
 	}
 
-	void Renderer3D::BeginScene(const PerspectiveCamera& camera)
+	void Renderer3D::BeginScene(const glm::mat4& viewProjection)
 	{
 		s_Data.CubeShader->Bind();
-		s_Data.CubeShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.CubeShader->SetMat4("u_ViewProjection", viewProjection);
+	}
+
+	void Renderer3D::BeginScene(const PerspectiveCamera& camera)
+	{
+		BeginScene(camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer3D::EndScene()

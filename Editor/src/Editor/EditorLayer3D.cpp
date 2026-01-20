@@ -4,15 +4,54 @@
 #include <Flux/Renderer/Renderer3D.h>
 #include <ImGui/ImGui.h>
 
+/*
+
+struct CameraComponent
+{
+	mat4 projection;
+	mat4 view;
+	mat4 viewprojection;
+
+	vec3 position;
+	vec3 rotation;
+
+	Update()
+	{
+		...
+		viewprojection = projection * view;
+	}
+};
+
+Scene::OnUpdate()
+{
+	UpdateEntities() -> That updates the entities' scripts ??
+
+	Camera* mainCamera = ...;
+
+	mainCamera->Update();
+
+	Renderer::BeginScene(mainCamera-viewprojection);
+
+	...
+
+	Renderer::EndScene();
+}
+
+CameraController script handles the CameraComponent's position/rotation
+position/rotation is then used to calculate viewprojection
+
+*/
+
 namespace Flux {
 
 	EditorLayer3D::EditorLayer3D()
-		: m_EditorCamera(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
 	{
 		Flux::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1920;
 		fbSpec.Height = 1080;
 		m_Framebuffer = Flux::Framebuffer::Create(fbSpec);
+
+		m_ActiveScene = CreateRef<Scene>();
 
 		std::vector<Vertex3D> vertices = {
 			{ { -0.5f, -0.5f,  0.5f } },
@@ -24,7 +63,7 @@ namespace Flux {
 			{ {  0.5f,  0.5f, -0.5f } },
 			{ { -0.5f,  0.5f, -0.5f } }
 		};
-		
+
 		std::vector<uint32_t> indices = {
 			0, 1, 2,
 			2, 3, 0,
@@ -40,9 +79,52 @@ namespace Flux {
 			1, 0, 4
 		};
 
-		m_ActiveScene = CreateRef<Scene>();
 		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
 		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::CreateMesh(vertices, indices));
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+
+			}
+
+			void OnDestroy()
+			{
+
+			}
+
+			void OnUpdate(Timestep ts)
+			{
+				auto& cameraComp = GetComponent<CameraComponent>();
+				float movementOffset = m_CameraSpeed * ts.GetSeconds();
+
+				if (Input::IsKeyPressed(FX_KEY_D))
+					cameraComp.Position -= cameraComp.ViewRight * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_A))
+					cameraComp.Position += cameraComp.ViewRight * movementOffset;
+
+				if (Input::IsKeyPressed(FX_KEY_W))
+					cameraComp.Position += cameraComp.ViewForward * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_S))
+					cameraComp.Position -= cameraComp.ViewForward * movementOffset;
+
+				if (Input::IsKeyPressed(FX_KEY_SPACE))
+					cameraComp.Position += cameraComp.ViewUp * movementOffset;
+				else if (Input::IsKeyPressed(FX_KEY_Q))
+					cameraComp.Position -= cameraComp.ViewUp * movementOffset;
+
+				cameraComp.Update();
+			}
+
+		private:
+			float m_CameraSpeed = 2.5f;
+		};
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
+		m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	EditorLayer3D::~EditorLayer3D()
@@ -59,9 +141,6 @@ namespace Flux {
 
 	void EditorLayer3D::OnEvent(Event& event)
 	{
-		if (m_ViewportFocused)
-			m_EditorCamera.OnEvent(event);
-
 		m_ActiveScene->OnEvent(event);
 	}
 
@@ -79,17 +158,19 @@ namespace Flux {
 
 		m_Framebuffer->Bind();
 
-		if (m_ViewportFocused)
-			m_EditorCamera.OnUpdate(ts);
-
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		Renderer3D::BeginScene(m_EditorCamera.GetCamera());
+		if (m_CameraEntity)
+		{
+			auto& cameraComp = m_CameraEntity.GetComponent<CameraComponent>();
 
-		m_ActiveScene->OnUpdate(ts);
+			Renderer3D::BeginScene(cameraComp.GetViewProjectionMatrix());
 
-		Renderer3D::EndScene();
+			m_ActiveScene->OnUpdate(ts);
+
+			Renderer3D::EndScene();
+		}
 
 		m_Framebuffer->Unbind();
 	}
@@ -163,7 +244,7 @@ namespace Flux {
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-				m_EditorCamera.SetProjection(45.0f, aspectRatio, 0.1f, 1000.0f);
+				m_CameraEntity.GetComponent<CameraComponent>().Projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();

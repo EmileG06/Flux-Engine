@@ -21,7 +21,7 @@ namespace Flux {
 	void PerspectiveCameraController::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<MouseMovedEvent>(FX_BIND_EVENT_FN(PerspectiveCameraController::OnMouseMoved));
+		dispatcher.Dispatch<MouseMovedEvent>(FX_BIND_EVENT_FN(OnMouseMoved));
 	}
 
 	void PerspectiveCameraController::OnUpdate(Timestep ts)

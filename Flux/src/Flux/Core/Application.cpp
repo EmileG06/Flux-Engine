@@ -16,7 +16,7 @@ namespace Flux {
 			m_Specification.Window.Title = spec.Title;
 
 		m_Window = Window::Create(spec.Window);
-		m_Window->SetEventCallback(FX_BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetEventCallback(FX_BIND_EVENT_FN(OnEvent));
 
 		Renderer::Init(m_Specification.Renderer);
 
@@ -51,7 +51,7 @@ namespace Flux {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowClosedEvent>(FX_BIND_EVENT_FN(Application::OnWindowClosed));
+		dispatcher.Dispatch<WindowClosedEvent>(FX_BIND_EVENT_FN(OnWindowClosed));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{

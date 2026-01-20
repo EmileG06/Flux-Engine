@@ -12,6 +12,7 @@ namespace Flux {
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const glm::mat4& viewProjection);
 		static void BeginScene(const PerspectiveCamera& camera);
 		static void EndScene();
 

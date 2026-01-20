@@ -56,8 +56,9 @@
 // --- Scene -------------
 // -----------------------
 
-#include "Flux/Scene/Entity.h"
 #include "Flux/Scene/Scene.h"
+#include "Flux/Scene/Entity.h"
+#include "Flux/Scene/ScriptableEntity.h"
 #include "Flux/Scene/Components.h"
 
 // -----------------------
