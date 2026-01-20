@@ -16,7 +16,4 @@ bin/
 *.dll
 *.lib
 *.pdb
-*.ilk
-
-# ImGui Files
-imgui.ini
+*.obj
