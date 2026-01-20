@@ -4,7 +4,7 @@
 #include "Editor/EditorLayer.h"
 #include "Editor/EditorLayer3D.h"
 
-#define USE_RENDERER_3D 0
+#define USE_RENDERER_3D 1
 
 class FluxEditor : public Flux::Application
 {

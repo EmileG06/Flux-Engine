@@ -130,15 +130,6 @@ namespace Flux {
 
 		if (ImGui::Begin("Statistics"))
 		{
-			const auto& lastFrame = Renderer2D::GetStats();
-
-			ImGui::Text("Draw Calls: %u", lastFrame.DrawCalls);
-			ImGui::Text("Quads: %u", lastFrame.QuadCount);
-			ImGui::Text("Vertices: %u", lastFrame.GetTotalVertexCount());
-			ImGui::Text("Indices: %u", lastFrame.GetTotalIndexCount());
-
-			ImGui::Separator();
-
 			const auto& position = m_Camera.GetPosition();
 			ImGui::Text("Camera Position: %.3f, %.3f, %.3f", position.x, position.y, position.z);
 
