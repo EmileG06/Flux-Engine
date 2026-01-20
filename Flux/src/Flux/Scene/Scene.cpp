@@ -28,16 +28,17 @@ namespace Flux {
 
 		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& scriptComp)
 			{
+				// TODO: This should happen when you play the scene (OnScenePlay)
 				if (!scriptComp.Instance)
 				{
-					scriptComp.CreateInstanceFn();
+					scriptComp.Instance = scriptComp.CreateScript();
 					FX_CORE_ASSERT(scriptComp.Instance, "Failed to create ScriptableEntity instance!");
 
 					scriptComp.Instance->m_Entity = { entity, this };
-					scriptComp.OnCreateFn(scriptComp.Instance);
+					scriptComp.Instance->OnCreate();
 				}
 
-				scriptComp.OnUpdateFn(scriptComp.Instance, ts);
+				scriptComp.Instance->OnUpdate(ts);
 			});
 
 		// -----------------------
@@ -45,10 +46,10 @@ namespace Flux {
 		// -----------------------
 
 		{
-			auto group = m_Registry.group<TransformComponent, MeshComponent>();
-			for (auto entity : group)
+			auto view = m_Registry.view<TransformComponent, MeshComponent>();
+			for (auto entity : view)
 			{
-				auto [transformComp, meshComp] = group.get(entity);
+				auto [transformComp, meshComp] = view.get<TransformComponent, MeshComponent>(entity);
 
 				Mesh* mesh = meshComp.GetMesh();
 				if (mesh)
@@ -63,6 +64,18 @@ namespace Flux {
 		entity.AddComponent<TagComponent>(tag);
 		entity.AddComponent<TransformComponent>(glm::mat4(1.0f));
 		return entity;
+	}
+
+	void Scene::OnViewportResized(uint32_t width, uint32_t height)
+	{
+		float aspectRatio = (float)width / (float)height;
+
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			cameraComp.Projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+		}
 	}
 
 }

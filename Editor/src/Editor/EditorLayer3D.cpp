@@ -84,18 +84,18 @@ namespace Flux {
 
 		class CameraController : public ScriptableEntity
 		{
-		public:
-			void OnCreate()
+		protected:
+			void OnCreate() override
 			{
 
 			}
 
-			void OnDestroy()
+			void OnDestroy() override
 			{
 
 			}
 
-			void OnUpdate(Timestep ts)
+			void OnUpdate(Timestep ts) override
 			{
 				auto& cameraComp = GetComponent<CameraComponent>();
 				float movementOffset = m_CameraSpeed * ts.GetSeconds();
@@ -244,7 +244,7 @@ namespace Flux {
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-				m_CameraEntity.GetComponent<CameraComponent>().Projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+				m_ActiveScene->OnViewportResized((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();

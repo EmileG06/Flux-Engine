@@ -86,12 +86,8 @@ namespace Flux {
 	{
 		ScriptableEntity* Instance = nullptr;
 
-		std::function<void()> CreateInstanceFn;
-		std::function<void()> DestroyInstanceFn;
-
-		std::function<void(ScriptableEntity*)> OnCreateFn;
-		std::function<void(ScriptableEntity*)> OnDestroyFn;
-		std::function<void(ScriptableEntity*, Timestep)> OnUpdateFn;
+		ScriptableEntity*(*CreateScript)();
+		void(*DestroyScript)(NativeScriptComponent*);
 
 		NativeScriptComponent() = default;
 		NativeScriptComponent(const NativeScriptComponent&) = default;
@@ -99,12 +95,12 @@ namespace Flux {
 		template <typename T>
 		void Bind()
 		{
-			CreateInstanceFn = [&]() { Instance = new T(); };
-			DestroyInstanceFn = [&]() { delete (T*)Instance; };
-
-			OnCreateFn = [](ScriptableEntity* instance) { ((T*)instance)->OnCreate(); };
-			OnDestroyFn = [](ScriptableEntity* instance) { ((T*)instance)->OnDestroy(); };
-			OnUpdateFn = [](ScriptableEntity* instance, Timestep ts) { ((T*)instance)->OnUpdate(ts); };
+			CreateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* scriptComp)
+				{ 
+					delete scriptComp->Instance;
+					scriptComp->Instance = nullptr;
+				};
 		}
 	};
 

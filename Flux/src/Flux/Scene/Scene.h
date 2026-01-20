@@ -20,6 +20,8 @@ namespace Flux {
 		void OnUpdate(Timestep ts);
 
 		Entity CreateEntity(const std::string& tag = "Unknown");
+		
+		void OnViewportResized(uint32_t width, uint32_t height);
 
 	private:
 		entt::registry m_Registry;
