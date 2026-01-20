@@ -7,14 +7,42 @@
 namespace Flux {
 
 	EditorLayer3D::EditorLayer3D()
-		: m_CameraController(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
+		: m_EditorCamera(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
 	{
 		Flux::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1920;
 		fbSpec.Height = 1080;
 		m_Framebuffer = Flux::Framebuffer::Create(fbSpec);
 
+		std::vector<Vertex3D> vertices = {
+			{ { -0.5f, -0.5f,  0.5f } },
+			{ {  0.5f, -0.5f,  0.5f } },
+			{ {  0.5f,  0.5f,  0.5f } },
+			{ { -0.5f,  0.5f,  0.5f } },
+			{ { -0.5f, -0.5f, -0.5f } },
+			{ {  0.5f, -0.5f, -0.5f } },
+			{ {  0.5f,  0.5f, -0.5f } },
+			{ { -0.5f,  0.5f, -0.5f } }
+		};
+		
+		std::vector<uint32_t> indices = {
+			0, 1, 2,
+			2, 3, 0,
+			1, 5, 6,
+			6, 2, 1,
+			5, 4, 7,
+			7, 6, 5,
+			4, 0, 3,
+			3, 7, 4,
+			3, 2, 6,
+			6, 7, 3,
+			4, 5, 1,
+			1, 0, 4
+		};
+
 		m_ActiveScene = CreateRef<Scene>();
+		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
+		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::CreateMesh(vertices, indices));
 	}
 
 	EditorLayer3D::~EditorLayer3D()
@@ -32,22 +60,34 @@ namespace Flux {
 	void EditorLayer3D::OnEvent(Event& event)
 	{
 		if (m_ViewportFocused)
-			m_CameraController.OnEvent(event);
+			m_EditorCamera.OnEvent(event);
+
+		m_ActiveScene->OnEvent(event);
 	}
 
 	void EditorLayer3D::OnUpdate(Timestep ts)
 	{
-		if (m_ViewportFocused)
-			m_CameraController.OnUpdate(ts);
+		if (m_CubeEntity)
+		{
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
+				* glm::rotate(glm::mat4(1.0f), Platform::GetTime(), glm::vec3(0.0f, 1.0f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 
-		Renderer2D::ResetStats();
+			auto& transformComp = m_CubeEntity.GetComponent<TransformComponent>();
+			transformComp.Transform = transform;
+		}
 
 		m_Framebuffer->Bind();
+
+		if (m_ViewportFocused)
+			m_EditorCamera.OnUpdate(ts);
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		Renderer3D::BeginScene(m_CameraController.GetCamera());
+		Renderer3D::BeginScene(m_EditorCamera.GetCamera());
+
+		m_ActiveScene->OnUpdate(ts);
 
 		Renderer3D::EndScene();
 
@@ -123,7 +163,7 @@ namespace Flux {
 			{
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-				m_CameraController.SetProjection(45.0f, aspectRatio, 0.1f, 1000.0f);
+				m_EditorCamera.SetProjection(45.0f, aspectRatio, 0.1f, 1000.0f);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();

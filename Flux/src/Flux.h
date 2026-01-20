@@ -7,6 +7,7 @@
 #include "Flux/Core.h"
 #include "Flux/Core/Log.h"
 #include "Flux/Core/Timestep.h"
+#include "Flux/Core/Platform.h"
 
 // -----------------------
 // --- Key/Mouse Input ---

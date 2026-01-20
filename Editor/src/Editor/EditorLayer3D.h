@@ -22,9 +22,10 @@ namespace Flux {
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
 		bool m_ViewportFocused = false;
 
-		PerspectiveCameraController m_CameraController;
+		PerspectiveCameraController m_EditorCamera;
 
 		Ref<Scene> m_ActiveScene;
+		Entity m_CubeEntity;
 	};
 
 }
