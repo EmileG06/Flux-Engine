@@ -2,6 +2,8 @@
 
 #include <Flux.h>
 
+#include "Panels/SceneHierarchyPanel.h"
+
 namespace Flux {
 
 	class EditorLayer : public Layer
@@ -25,6 +27,8 @@ namespace Flux {
 		Ref<Scene> m_ActiveScene;
 		Entity m_CameraEntity;
 		Entity m_CubeEntity;
+
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 
 }

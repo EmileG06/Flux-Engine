@@ -87,6 +87,8 @@ namespace Flux {
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
 		m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	EditorLayer::~EditorLayer()
@@ -108,16 +110,6 @@ namespace Flux {
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
-		if (m_CubeEntity)
-		{
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
-				* glm::rotate(glm::mat4(1.0f), Platform::GetTime(), glm::vec3(0.0f, 1.0f, 0.0f))
-				* glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-
-			auto& transformComp = m_CubeEntity.GetComponent<TransformComponent>();
-			transformComp.Transform = transform;
-		}
-
 		m_Framebuffer->Bind();
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -175,6 +167,8 @@ namespace Flux {
 		}
 #pragma endregion
 
+#pragma region Toolbar
+
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -185,15 +179,15 @@ namespace Flux {
 			ImGui::EndMenuBar();
 		}
 
-		if (ImGui::Begin("Settings"))
-		{
-			ImGui::End();
-		}
+#pragma endregion
 
-		if (ImGui::Begin("Statistics"))
-		{
-			ImGui::End();
-		}
+#pragma region Panels
+
+		m_SceneHierarchyPanel.OnImGuiRender();
+
+#pragma endregion
+
+#pragma region Viewport
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
 		ImGui::Begin("Viewport");
@@ -214,6 +208,8 @@ namespace Flux {
 			ImGui::End();
 		}
 		ImGui::PopStyleVar();
+
+#pragma endregion
 
 		ImGui::End();
 	}
