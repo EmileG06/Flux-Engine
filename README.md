@@ -1,44 +1,54 @@
+
 # Flux-Engine
 
-- A modern, (hopefully) high-performance 2D and 3D game engine built with OpenGL 4.6 Core and C++23.
-- This project is used as a learning experience, expect some questionable code =).
+A modern 2D and 3D game engine built with OpenGL 4.6 Core and C++23
+
+# Disclaimer
+
+This project is strongly inspired by TheCherno’s game engine series. The goal is to expand on it by adding 3D support and my own ideas along the way.
+
+I’m not claiming this as a fully original engine built from scratch. This project is primarily a learning and experimentation space, where I explore engine architecture and graphics concepts. It’s not meant to demonstrate a finished or fully independent engine, just the process of learning and improving.
 
 ## Features
 
 **Graphics & Rendering**
 - OpenGL 4.6 Core
-- Batch renderer for 2D Quads
-- Platform-agnostic-ish design for eventual cross-platform compatibility
+- Batch rendering for 2D Quads
 
 **Architecture**
-- Layer/overlay system for organization and some scalability
+- Layer/overlay system
 - Event-driven architecture for input
-- ImGui with dockspace support for editor UI (also useful for some debugging)
 
 **Modern C++**
-- Built with C++23 because std::println
-- Clean, maintainable codebase following modern best practices (I'm trying)
+- Built with C++23
+- Clean, maintainable codebase following modern best practices
+
+**Editor (WIP)**
+- Uses Dear ImGui for user interface
+- Very primitive scene editor as of right now, you can only modify the tag and transform of existing entities
 
 ## Requirements
 
-- Visual Studio 2022
+- Visual Studio 2022/2026
 - OpenGL 4.6 capable GPU
 - Premake5
 
 ## Building
 
-```bash
-# Clone the repository
+```
+- Clone the repository
 git clone https://github.com/EmileG06/Flux-Engine.git --recursive
 
-# Premake5
-I didn't include the premake5 binaries in the repo, you will have to download it manually and place it in 'Flux-Engine/vendor/premake5/bin/premake5.exe'
+- Premake5
+I didn't include the premake5 binaries in the repo,
+you will have to download it manually and place it in 'Flux-Engine/vendor/premake5/bin/premake5.exe'
+If the directory doesn't exist, create it manually
 
-# Generate solution files
+- Generate solution files
 run Generate.bat in the scripts folder
 
-# Open solution and build
-Use VS2022 minimum
+- Build
+Open solution file with Visual Studio and build the solution
 ```
 
 ## Acknowledgments
@@ -54,4 +64,3 @@ Use VS2022 minimum
 - [The Cherno](https://www.youtube.com/@TheCherno)
 - [LearnOpenGL](https://learnopengl.com/)
 - [OGLDEV](https://www.youtube.com/@OGLDEV)
-- [PirateSoftware](https://youtu.be/Aq5WXmQQooo)
