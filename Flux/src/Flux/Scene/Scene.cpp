@@ -53,7 +53,7 @@ namespace Flux {
 
 				Mesh* mesh = meshComp.GetMesh();
 				if (mesh)
-					Renderer3D::DrawMesh(*mesh, transformComp.Transform, { 0.8f, 0.2f, 0.3f, 1.0f });
+					Renderer3D::DrawMesh(*mesh, transformComp.GetTransform(), {0.8f, 0.2f, 0.3f, 1.0f});
 			}
 		}
 	}
@@ -62,7 +62,7 @@ namespace Flux {
 	{
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TagComponent>(tag);
-		entity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		entity.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		return entity;
 	}
 

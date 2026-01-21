@@ -49,12 +49,10 @@ namespace Flux {
 		protected:
 			void OnCreate() override
 			{
-
 			}
 
 			void OnDestroy() override
 			{
-
 			}
 
 			void OnUpdate(Timestep ts) override
