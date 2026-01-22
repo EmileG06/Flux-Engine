@@ -45,7 +45,21 @@ namespace Flux {
 		// --- Render ------------
 		// -----------------------
 
+		CameraComponent* mainCamera = nullptr;
 		{
+			auto view = m_Registry.view<CameraComponent>();
+			for (auto entity : view)
+			{
+				auto& cameraComp = view.get<CameraComponent>(entity);
+				if (cameraComp.MainCamera)
+					mainCamera = &cameraComp;
+			}
+		}
+
+		if (mainCamera)
+		{
+			Renderer3D::BeginScene(mainCamera->GetViewProjectionMatrix());
+
 			auto view = m_Registry.view<TransformComponent, MeshComponent>();
 			for (auto entity : view)
 			{
@@ -55,6 +69,8 @@ namespace Flux {
 				if (mesh)
 					Renderer3D::DrawMesh(*mesh, transformComp.GetTransform(), {0.8f, 0.2f, 0.3f, 1.0f});
 			}
+
+			Renderer3D::EndScene();
 		}
 	}
 

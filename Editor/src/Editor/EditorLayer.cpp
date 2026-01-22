@@ -15,9 +15,6 @@ namespace Flux {
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
-		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::GetCube());
-
 		class CameraController : public ScriptableEntity
 		{
 		protected:
@@ -56,10 +53,10 @@ namespace Flux {
 			float m_CameraSpeed = 2.5f;
 		};
 
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
-		auto& cameraComp = m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
+		auto cameraEntity = m_ActiveScene->CreateEntity("Camera");
+		auto& cameraComp = cameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
 		cameraComp.MainCamera = true;
-		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -88,16 +85,7 @@ namespace Flux {
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		if (m_CameraEntity)
-		{
-			auto& cameraComp = m_CameraEntity.GetComponent<CameraComponent>();
-
-			Renderer3D::BeginScene(cameraComp.GetViewProjectionMatrix());
-
-			m_ActiveScene->OnUpdate(ts);
-
-			Renderer3D::EndScene();
-		}
+		m_ActiveScene->OnUpdate(ts);
 
 		m_Framebuffer->Unbind();
 	}

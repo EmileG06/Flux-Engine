@@ -25,8 +25,6 @@ namespace Flux {
 		bool m_ViewportFocused = false;
 
 		Ref<Scene> m_ActiveScene;
-		Entity m_CameraEntity;
-		Entity m_CubeEntity;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
