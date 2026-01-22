@@ -46,7 +46,7 @@ namespace Flux {
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
 		m_ProjectionMatrix = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
-		UpdateView();
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void EditorCamera::UpdateView()
