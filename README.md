@@ -12,20 +12,26 @@ I’m not claiming this as a fully original engine built from scratch. This proj
 ## Features
 
 **Graphics & Rendering**
-- OpenGL 4.6 Core
-- Batch rendering for 2D Quads
+- 2D quads using batch rendering
+- 3D rendering (currently only hard coded meshes)
 
 **Architecture**
 - Layer/overlay system
-- Event-driven architecture for input
-
-**Modern C++**
-- Built with C++23
-- Clean, maintainable codebase following modern best practices
+- Events that can propagate (window, keyboard, mouse)
+- Entity component system using entt
+- Native scripting
 
 **Editor (WIP)**
 - Uses Dear ImGui for user interface
-- Very primitive scene editor as of right now, you can only modify the tag and transform of existing entities
+- Dockable/resizable panels
+- Create/Delete entity
+- Create/Delete component
+
+**Components**
+- Tag Component
+- Transform Component
+- Mesh Component
+- Native Script Component
 
 ## Requirements
 
