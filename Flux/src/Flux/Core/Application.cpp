@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Flux/Core/Platform.h"
+#include "Flux/Assets/AssetManager.h"
 
 namespace Flux {
 
@@ -18,6 +19,7 @@ namespace Flux {
 		m_Window = Window::Create(spec.Window);
 		m_Window->SetEventCallback(FX_BIND_EVENT_FN(OnEvent));
 
+		AssetManager::Init();
 		Renderer::Init(m_Specification.Renderer);
 
 		m_ImGuiLayer = new ImGuiLayer();

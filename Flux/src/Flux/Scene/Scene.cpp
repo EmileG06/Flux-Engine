@@ -66,6 +66,11 @@ namespace Flux {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::OnViewportResized(uint32_t width, uint32_t height)
 	{
 		float aspectRatio = (float)width / (float)height;

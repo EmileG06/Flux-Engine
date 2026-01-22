@@ -20,6 +20,7 @@ namespace Flux {
 		void OnUpdate(Timestep ts);
 
 		Entity CreateEntity(const std::string& tag = "Unknown");
+		void DestroyEntity(Entity entity);
 		
 		void OnViewportResized(uint32_t width, uint32_t height);
 

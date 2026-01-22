@@ -15,34 +15,8 @@ namespace Flux {
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		std::vector<Vertex3D> vertices = {
-			{ { -0.5f, -0.5f,  0.5f } },
-			{ {  0.5f, -0.5f,  0.5f } },
-			{ {  0.5f,  0.5f,  0.5f } },
-			{ { -0.5f,  0.5f,  0.5f } },
-			{ { -0.5f, -0.5f, -0.5f } },
-			{ {  0.5f, -0.5f, -0.5f } },
-			{ {  0.5f,  0.5f, -0.5f } },
-			{ { -0.5f,  0.5f, -0.5f } }
-		};
-
-		std::vector<uint32_t> indices = {
-			0, 1, 2,
-			2, 3, 0,
-			1, 5, 6,
-			6, 2, 1,
-			5, 4, 7,
-			7, 6, 5,
-			4, 0, 3,
-			3, 7, 4,
-			3, 2, 6,
-			6, 7, 3,
-			4, 5, 1,
-			1, 0, 4
-		};
-
 		m_CubeEntity = m_ActiveScene->CreateEntity("Cube");
-		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::CreateMesh(vertices, indices));
+		m_CubeEntity.AddComponent<MeshComponent>(AssetManager::GetCube());
 
 		class CameraController : public ScriptableEntity
 		{
@@ -83,7 +57,8 @@ namespace Flux {
 		};
 
 		m_CameraEntity = m_ActiveScene->CreateEntity("Camera");
-		m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
+		auto& cameraComp = m_CameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
+		cameraComp.MainCamera = true;
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);

@@ -47,6 +47,7 @@ namespace Flux {
 
 		operator bool() const { return m_EntityID != entt::null; }
 		operator uint32_t() const { return (uint32_t)m_EntityID; }
+		operator entt::entity() const { return m_EntityID; }
 
 		bool operator==(const Entity& other) const
 		{

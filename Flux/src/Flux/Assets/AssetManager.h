@@ -76,6 +76,10 @@ namespace Flux {
 	class AssetManager
 	{
 	public:
+		static void Init();
+
+		static MeshHandle GetCube();
+
 		static MeshHandle CreateMesh(const std::string& filePath);
 		static MeshHandle CreateMesh(std::vector<Vertex3D>& vertices, std::vector<uint32_t>& indices);
 		static Mesh* GetMesh(MeshHandle handle);
