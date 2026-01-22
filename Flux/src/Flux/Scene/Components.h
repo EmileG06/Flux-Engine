@@ -58,12 +58,12 @@ namespace Flux {
 	struct CameraComponent
 	{
 		bool MainCamera = false;
+		float AspectRatio = 0.0f;
 
 		glm::mat4 Projection;
 		glm::mat4 View;
 		glm::mat4 ViewProjection;
 
-		glm::vec3 Position = { 0.0f, 0.0f, 3.0f };
 		glm::vec3 Rotation = { 0.0f, -90.0f, 0.0f };
 
 		glm::vec3 ViewForward;
@@ -73,9 +73,10 @@ namespace Flux {
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 		CameraComponent(const glm::mat4& projection)
-			: Projection(projection) { }
+			: Projection(projection) {
+		}
 
-		void Update()
+		void Update(const glm::vec3& position)
 		{
 			glm::vec3 forward;
 			forward.x = glm::cos(glm::radians(Rotation.y)) * glm::cos(glm::radians(Rotation.x));
@@ -87,7 +88,7 @@ namespace Flux {
 			ViewRight = glm::normalize(glm::cross(worldUp, ViewForward));
 			ViewUp = glm::normalize(glm::cross(ViewForward, ViewRight));
 
-			View = glm::lookAt(Position, Position + ViewForward, { 0.0f, 1.0f, 0.0f });
+			View = glm::lookAt(position, position + ViewForward, { 0.0f, 1.0f, 0.0f });
 			ViewProjection = Projection * View;
 		}
 

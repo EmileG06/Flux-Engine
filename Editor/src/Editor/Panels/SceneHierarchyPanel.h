@@ -24,13 +24,13 @@ namespace Flux {
 		void DrawEntityComponents(Entity entity);
 
 		template <typename T>
-		void DrawComponent(Entity entity, const std::function<void(T&)>& func)
+		void DrawComponent(const std::string& label, Entity entity, const std::function<void(T&)>& func)
 		{
 			constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
 			if (entity.HasComponent<T>())
 			{
-				bool opened = ImGui::TreeNodeEx((void*)(typeid(T).hash_code() + (uint32_t)entity), treeNodeFlags, "Tag Component");
+				bool opened = ImGui::TreeNodeEx((void*)(typeid(T).hash_code() + (uint32_t)entity), treeNodeFlags, label.c_str());
 
 				bool componentDeleted = false;
 				if (!std::is_same_v<T, TagComponent>)

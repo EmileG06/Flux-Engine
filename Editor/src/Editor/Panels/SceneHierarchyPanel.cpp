@@ -67,10 +67,32 @@ namespace Flux {
 						ImGui::CloseCurrentPopup();
 					}
 
-					if (ImGui::MenuItem("Cube Mesh"))
+					if (ImGui::BeginMenu("Mesh"))
 					{
-						m_SelectionContext.AddComponent<MeshComponent>(AssetManager::GetCube());
-						ImGui::CloseCurrentPopup();
+						if (ImGui::MenuItem("Empty"))
+						{
+							// TODO: Implement this
+							ImGui::CloseCurrentPopup();
+						}
+
+						if (ImGui::MenuItem("Cube"))
+						{
+							m_SelectionContext.AddComponent<MeshComponent>(AssetManager::GetCube());
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Native Script"))
+					{
+						if (ImGui::MenuItem("Camera Controller"))
+						{
+							m_SelectionContext.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndMenu();
 					}
 
 					ImGui::EndMenu();
@@ -123,7 +145,7 @@ namespace Flux {
 
 	void SceneHierarchyPanel::DrawEntityComponents(Entity entity)
 	{
-		DrawComponent<TagComponent>(entity, [](TagComponent& component)
+		DrawComponent<TagComponent>("Tag Component", entity, [](TagComponent& component)
 			{
 				auto& tag = component.Tag;
 
@@ -134,7 +156,7 @@ namespace Flux {
 					tag = std::string(buffer);
 			});
 
-		DrawComponent<TransformComponent>(entity, [](TransformComponent& component)
+		DrawComponent<TransformComponent>("Transform Component", entity, [](TransformComponent& component)
 			{
 				Widgets::DrawVec3("Position", component.Translation, 0.0f);
 
@@ -143,6 +165,15 @@ namespace Flux {
 				component.Rotation = glm::radians(rotation);
 
 				Widgets::DrawVec3("Scale", component.Scale, 1.0f);
+			});
+
+		DrawComponent<CameraComponent>("Camera Component", entity, [](CameraComponent& component)
+			{
+				ImGui::Checkbox("Main Camera", &component.MainCamera);
+			});
+
+		DrawComponent<MeshComponent>("Mesh Component", entity, [](MeshComponent& component)
+			{
 			});
 	}
 

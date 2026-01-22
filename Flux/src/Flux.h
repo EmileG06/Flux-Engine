@@ -48,6 +48,8 @@
 #include "Flux/Renderer/Framebuffer.h"
 #include "Flux/Renderer/Mesh.h"
 
+#include "Flux/Renderer/Camera.h"
+#include "Flux/Renderer/EditorCamera.h"
 #include "Flux/Renderer/OrthographicCamera.h"
 #include "Flux/Renderer/PerspectiveCamera.h"
 #include "Flux/Renderer/PerspectiveCameraController.h"
@@ -60,6 +62,12 @@
 #include "Flux/Scene/Entity.h"
 #include "Flux/Scene/ScriptableEntity.h"
 #include "Flux/Scene/Components.h"
+
+// -----------------------
+// --- Scripts -----------
+// -----------------------
+
+#include <Flux/Scripts/CameraController.h>
 
 // -----------------------
 // --- Assets ------------

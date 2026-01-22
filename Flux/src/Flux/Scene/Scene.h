@@ -2,7 +2,7 @@
 
 #include "Flux/Core.h"
 #include "Flux/Core/Timestep.h"
-#include "Flux/Renderer/PerspectiveCameraController.h"
+#include "Flux/Renderer/EditorCamera.h"
 
 #include <entt.hpp>
 
@@ -17,7 +17,7 @@ namespace Flux {
 		~Scene();
 
 		void OnEvent(Event& event);
-		void OnUpdate(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 
 		Entity CreateEntity(const std::string& tag = "Unknown");
 		void DestroyEntity(Entity entity);

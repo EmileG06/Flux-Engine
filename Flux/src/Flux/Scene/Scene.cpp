@@ -20,7 +20,7 @@ namespace Flux {
 	{
 	}
 
-	void Scene::OnUpdate(Timestep ts)
+	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
 		// -----------------------
 		// --- Update ------------
@@ -45,33 +45,19 @@ namespace Flux {
 		// --- Render ------------
 		// -----------------------
 
-		CameraComponent* mainCamera = nullptr;
+		Renderer3D::BeginScene(camera.GetViewProjectionMatrix());
+
+		auto view = m_Registry.view<TransformComponent, MeshComponent>();
+		for (auto entity : view)
 		{
-			auto view = m_Registry.view<CameraComponent>();
-			for (auto entity : view)
-			{
-				auto& cameraComp = view.get<CameraComponent>(entity);
-				if (cameraComp.MainCamera)
-					mainCamera = &cameraComp;
-			}
+			auto [transformComp, meshComp] = view.get<TransformComponent, MeshComponent>(entity);
+
+			Mesh* mesh = meshComp.GetMesh();
+			if (mesh)
+				Renderer3D::DrawMesh(*mesh, transformComp.GetTransform(), { 0.8f, 0.2f, 0.3f, 1.0f });
 		}
 
-		if (mainCamera)
-		{
-			Renderer3D::BeginScene(mainCamera->GetViewProjectionMatrix());
-
-			auto view = m_Registry.view<TransformComponent, MeshComponent>();
-			for (auto entity : view)
-			{
-				auto [transformComp, meshComp] = view.get<TransformComponent, MeshComponent>(entity);
-
-				Mesh* mesh = meshComp.GetMesh();
-				if (mesh)
-					Renderer3D::DrawMesh(*mesh, transformComp.GetTransform(), {0.8f, 0.2f, 0.3f, 1.0f});
-			}
-
-			Renderer3D::EndScene();
-		}
+		Renderer3D::EndScene();
 	}
 
 	Entity Scene::CreateEntity(const std::string& tag)
@@ -95,6 +81,7 @@ namespace Flux {
 		for (auto entity : view)
 		{
 			auto& cameraComp = view.get<CameraComponent>(entity);
+			cameraComp.AspectRatio = aspectRatio;
 			cameraComp.Projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
 		}
 	}

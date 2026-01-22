@@ -2,11 +2,14 @@
 
 #include <Flux/Renderer/RenderCommand.h>
 #include <Flux/Renderer/Renderer3D.h>
+#include <Flux/Scripts/CameraController.h>
+
 #include <ImGui/ImGui.h>
 
 namespace Flux {
 
 	EditorLayer::EditorLayer()
+		: m_EditorCamera(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f)
 	{
 		Flux::FramebufferSpecification fbSpec;
 		fbSpec.Width = 1920;
@@ -15,48 +18,8 @@ namespace Flux {
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		class CameraController : public ScriptableEntity
-		{
-		protected:
-			void OnCreate() override
-			{
-			}
-
-			void OnDestroy() override
-			{
-			}
-
-			void OnUpdate(Timestep ts) override
-			{
-				auto& cameraComp = GetComponent<CameraComponent>();
-				float movementOffset = m_CameraSpeed * ts.GetSeconds();
-
-				if (Input::IsKeyPressed(FX_KEY_D))
-					cameraComp.Position -= cameraComp.ViewRight * movementOffset;
-				else if (Input::IsKeyPressed(FX_KEY_A))
-					cameraComp.Position += cameraComp.ViewRight * movementOffset;
-
-				if (Input::IsKeyPressed(FX_KEY_W))
-					cameraComp.Position += cameraComp.ViewForward * movementOffset;
-				else if (Input::IsKeyPressed(FX_KEY_S))
-					cameraComp.Position -= cameraComp.ViewForward * movementOffset;
-
-				if (Input::IsKeyPressed(FX_KEY_SPACE))
-					cameraComp.Position += cameraComp.ViewUp * movementOffset;
-				else if (Input::IsKeyPressed(FX_KEY_Q))
-					cameraComp.Position -= cameraComp.ViewUp * movementOffset;
-
-				cameraComp.Update();
-			}
-
-		private:
-			float m_CameraSpeed = 2.5f;
-		};
-
-		auto cameraEntity = m_ActiveScene->CreateEntity("Camera");
-		auto& cameraComp = cameraEntity.AddComponent<CameraComponent>(glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 1000.0f));
-		cameraComp.MainCamera = true;
-		cameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		auto cubeEntity = m_ActiveScene->CreateEntity("Cube");
+		cubeEntity.AddComponent<MeshComponent>(AssetManager::GetCube());
 		
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -75,17 +38,23 @@ namespace Flux {
 
 	void EditorLayer::OnEvent(Event& event)
 	{
+		if (m_ViewportFocused)
+			m_EditorCamera.OnEvent(event);
+
 		m_ActiveScene->OnEvent(event);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
+		if (m_ViewportFocused)
+			m_EditorCamera.OnUpdate(ts);
+
 		m_Framebuffer->Bind();
 
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		m_ActiveScene->OnUpdate(ts);
+		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
 		m_Framebuffer->Unbind();
 	}
@@ -162,6 +131,7 @@ namespace Flux {
 				m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
 				m_ActiveScene->OnViewportResized((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+				m_EditorCamera.SetViewportSize(viewportPanelSize.x, viewportPanelSize.y);
 				m_ViewportSize = viewportPanelSize;
 			}
 			uint32_t textureID = m_Framebuffer->GetColorAttachmentID();
