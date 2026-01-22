@@ -1,5 +1,8 @@
 #include "SceneHierarchyPanel.h"
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -61,6 +64,76 @@ namespace Flux {
 		}
 	}
 
+#pragma region Component Widgets
+
+	static void DrawVec3Widget(const std::string& label, glm::vec3& value, float resetValue = 0.0f, float columnWidth = 100.0f)
+	{
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+
+		// Label Column
+		ImGui::SetColumnWidth(0, columnWidth);
+
+		ImGui::Text(label.c_str());
+
+		// Vec3 Column
+		ImGui::NextColumn();
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 0.0f });
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.9f, 0.25f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f, 0.1f, 0.15f, 1.0f });
+		if (ImGui::Button("X", buttonSize))
+			value.x = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+
+		ImGui::DragFloat("##x", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
+
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.2f, 0.7f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.3f, 0.8f, 0.3f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.2f, 0.7f, 0.3f, 1.0f });
+		if (ImGui::Button("Y", buttonSize))
+			value.y = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+
+		ImGui::DragFloat("##y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
+
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.25f, 0.85f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.2f, 0.35f, 0.9f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f, 0.1f, 0.15f, 1.0f });
+		if (ImGui::Button("Z", buttonSize))
+			value.z = resetValue;
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+
+		ImGui::DragFloat("##z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
+
+		ImGui::PopItemWidth();
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
+#pragma endregion
+
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
 		if (entity.HasComponent<TagComponent>())
@@ -85,9 +158,14 @@ namespace Flux {
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform Component"))
 			{
 				auto& transform = entity.GetComponent<TransformComponent>();
-				ImGui::DragFloat3("Position", glm::value_ptr(transform.Translation), 0.1f);
-				ImGui::DragFloat3("Rotation", glm::value_ptr(transform.Rotation), 0.1f);
-				ImGui::DragFloat3("Scale", glm::value_ptr(transform.Scale), 0.1f);
+
+				DrawVec3Widget("Position", transform.Translation, 0.0f);
+
+				glm::vec3 rotation = glm::degrees(transform.Rotation);
+				DrawVec3Widget("Rotation", rotation, 0.0f);
+				transform.Rotation = glm::radians(rotation);
+
+				DrawVec3Widget("Scale", transform.Scale, 1.0f);
 
 				ImGui::TreePop();
 			}

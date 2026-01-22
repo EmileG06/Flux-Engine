@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Flux.h>
-#include <imgui/imgui.h>
 
 namespace Flux {
 
