@@ -67,6 +67,7 @@ Open solution file with Visual Studio and build the solution
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [tinygltf](https://github.com/syoyo/tinygltf)
 - [entt](https://github.com/skypjack/entt)
+- [yaml-cpp](https://github.com/jbeder/yaml-cpp)
 - [The Cherno](https://www.youtube.com/@TheCherno)
 - [LearnOpenGL](https://learnopengl.com/)
 - [OGLDEV](https://www.youtube.com/@OGLDEV)
