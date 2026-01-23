@@ -1,18 +1,23 @@
 [submodule "Flux/vendor/glfw"]
 	path = Flux/vendor/glfw
 	url = https://github.com/EmileG06/glfw
+	shallow = true
 [submodule "Flux/vendor/glad"]
 	path = Flux/vendor/glad
 	url = https://github.com/EmileG06/glad
+	shallow = true
 [submodule "Flux/vendor/imgui"]
 	path = Flux/vendor/imgui
 	url = https://github.com/EmileG06/ImGuiPremake
+	shallow = true
 [submodule "Flux/vendor/glm"]
 	path = Flux/vendor/glm
 	url = https://github.com/g-truc/glm
+	shallow = true
 [submodule "Flux/vendor/yaml-cpp"]
 	path = Flux/vendor/yaml-cpp
 	url = https://github.com/EmileG06/yaml-cpp
+	shallow = true
 [submodule "Flux/vendor/entt"]
 	path = Flux/vendor/entt
 	url = https://github.com/skypjack/entt
@@ -20,3 +25,4 @@
 [submodule "Flux/vendor/stb"]
 	path = Flux/vendor/stb
 	url = https://github.com/nothings/stb
+	shallow = true
