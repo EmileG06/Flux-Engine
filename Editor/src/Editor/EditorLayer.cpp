@@ -90,11 +90,14 @@ namespace Flux {
 			ImGui::PopStyleVar(2);
 
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.WindowMinSize.x = 385.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspaceID, { 0.0f, 0.0f }, dockFlags);
 		}
+		style.WindowMinSize.x = 32.0f;
 #pragma endregion
 
 #pragma region Toolbar

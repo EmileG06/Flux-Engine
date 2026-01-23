@@ -7,9 +7,12 @@ namespace Flux {
 
 	void Widgets::DrawVec3(const std::string& label, glm::vec3& value, float resetValue, float columnWidth)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		ImFont* boldFont = io.Fonts->Fonts[0];
+
 		ImGui::PushID(label.c_str());
 
-		ImGui::Columns(2);
+		ImGui::Columns(2, (const char*)0, false);
 
 		// Label Column
 		ImGui::SetColumnWidth(0, columnWidth);
@@ -27,8 +30,10 @@ namespace Flux {
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.15f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.9f, 0.25f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("X", buttonSize))
 			value.x = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -41,8 +46,10 @@ namespace Flux {
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.2f, 0.7f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.3f, 0.8f, 0.3f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.2f, 0.7f, 0.3f, 1.0f });
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize))
 			value.y = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
@@ -55,8 +62,10 @@ namespace Flux {
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.25f, 0.85f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.2f, 0.35f, 0.9f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize))
 			value.z = resetValue;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();

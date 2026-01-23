@@ -1,7 +1,5 @@
 #include "SceneHierarchyPanel.h"
 
-#include <imgui/imgui_internal.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -54,53 +52,7 @@ namespace Flux {
 		ImGui::Begin("Properties");
 
 		if (m_SelectionContext)
-		{
 			DrawEntityComponents(m_SelectionContext);
-
-			if (ImGui::BeginPopupContextWindow("", ImGuiMouseButton_Right, false))
-			{
-				if (ImGui::BeginMenu("Add Component"))
-				{
-					if (ImGui::MenuItem("Camera"))
-					{
-						m_SelectionContext.AddComponent<CameraComponent>();
-						ImGui::CloseCurrentPopup();
-					}
-
-					if (ImGui::BeginMenu("Mesh"))
-					{
-						if (ImGui::MenuItem("Empty"))
-						{
-							// TODO: Implement this
-							ImGui::CloseCurrentPopup();
-						}
-
-						if (ImGui::MenuItem("Cube"))
-						{
-							m_SelectionContext.AddComponent<MeshComponent>(AssetManager::GetCube());
-							ImGui::CloseCurrentPopup();
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Native Script"))
-					{
-						if (ImGui::MenuItem("Camera Controller"))
-						{
-							m_SelectionContext.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-							ImGui::CloseCurrentPopup();
-						}
-
-						ImGui::EndMenu();
-					}
-
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndPopup();
-			}
-		}
 
 		ImGui::End();
 	}
@@ -109,7 +61,7 @@ namespace Flux {
 	{
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 
-		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_OpenOnArrow : 0) | ImGuiTreeNodeFlags_Selected;
+		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_OpenOnArrow : 0) | ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
@@ -126,7 +78,7 @@ namespace Flux {
 
 		if (opened)
 		{
-			ImGuiTreeNodeFlags childFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+			ImGuiTreeNodeFlags childFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 			bool childOpened = ImGui::TreeNodeEx((void*)309485, childFlags, tag.c_str());
 			if (childOpened)
 				ImGui::TreePop();
@@ -145,18 +97,65 @@ namespace Flux {
 
 	void SceneHierarchyPanel::DrawEntityComponents(Entity entity)
 	{
-		DrawComponent<TagComponent>("Tag Component", entity, [](TagComponent& component)
+		if (entity.HasComponent<TagComponent>())
+		{
+			auto& tag = entity.GetComponent<TagComponent>().Tag;
+
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+				tag = std::string(buffer);
+		}
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("##AddComponent");
+
+		if (ImGui::BeginPopup("##AddComponent"))
+		{
+			if (ImGui::MenuItem("Camera"))
 			{
-				auto& tag = component.Tag;
+				m_SelectionContext.AddComponent<CameraComponent>();
+				ImGui::CloseCurrentPopup();
+			}
 
-				char buffer[256] = {};
-				std::strncpy(buffer, tag.c_str(), sizeof(buffer) - 1);
+			if (ImGui::BeginMenu("Mesh"))
+			{
+				if (ImGui::MenuItem("Empty"))
+				{
+					// TODO: Implement this
+					ImGui::CloseCurrentPopup();
+				}
 
-				if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
-					tag = std::string(buffer);
-			});
+				if (ImGui::MenuItem("Cube"))
+				{
+					m_SelectionContext.AddComponent<MeshComponent>(AssetManager::GetCube());
+					ImGui::CloseCurrentPopup();
+				}
 
-		DrawComponent<TransformComponent>("Transform Component", entity, [](TransformComponent& component)
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Native Script"))
+			{
+				if (ImGui::MenuItem("Camera Controller"))
+				{
+					m_SelectionContext.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		ImGui::PopItemWidth();
+
+		DrawComponent<TransformComponent>("Transform", entity, [](TransformComponent& component)
 			{
 				Widgets::DrawVec3("Position", component.Translation, 0.0f);
 
@@ -167,12 +166,12 @@ namespace Flux {
 				Widgets::DrawVec3("Scale", component.Scale, 1.0f);
 			});
 
-		DrawComponent<CameraComponent>("Camera Component", entity, [](CameraComponent& component)
+		DrawComponent<CameraComponent>("Camera", entity, [](CameraComponent& component)
 			{
 				ImGui::Checkbox("Main Camera", &component.MainCamera);
 			});
 
-		DrawComponent<MeshComponent>("Mesh Component", entity, [](MeshComponent& component)
+		DrawComponent<MeshComponent>("Mesh", entity, [](MeshComponent& component)
 			{
 			});
 	}
