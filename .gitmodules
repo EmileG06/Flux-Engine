@@ -16,6 +16,7 @@
 [submodule "Flux/vendor/entt"]
 	path = Flux/vendor/entt
 	url = https://github.com/skypjack/entt
+	shallow = true
 [submodule "Flux/vendor/stb"]
 	path = Flux/vendor/stb
 	url = https://github.com/nothings/stb
