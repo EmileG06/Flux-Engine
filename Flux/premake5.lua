@@ -42,7 +42,8 @@ project "Flux"
         "%{Includes.imgui}",
         "%{Includes.stb_image}",
         "%{Includes.tinygltf}",
-        "%{Includes.entt}"
+        "%{Includes.entt}",
+        "%{Includes.yaml}"
     }
 
     links
@@ -50,7 +51,8 @@ project "Flux"
         "opengl32.lib",
         "glfw",
         "glad",
-        "imgui"
+        "imgui",
+        "yaml-cpp"
     }
 
     filter "system:windows"
