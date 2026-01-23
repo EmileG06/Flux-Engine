@@ -30,7 +30,7 @@ project "Flux"
         "src/**.cpp",
         "%{Includes.glm}/**.hpp",
         "%{Includes.glm}/**.inl",
-        "%{Includes.stb_image}/stb_image.h"
+        "%{Includes.stb}/stb_image.h"
     }
 
     includedirs
@@ -40,8 +40,7 @@ project "Flux"
         "%{Includes.glad}",
         "%{Includes.glm}",
         "%{Includes.imgui}",
-        "%{Includes.stb_image}",
-        "%{Includes.tinygltf}",
+        "%{Includes.stb}",
         "%{Includes.entt}",
         "%{Includes.yaml}"
     }

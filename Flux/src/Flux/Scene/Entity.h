@@ -3,7 +3,7 @@
 #include "Flux/Core.h"
 #include "Flux/Scene/Scene.h"
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 
 namespace Flux {
 
