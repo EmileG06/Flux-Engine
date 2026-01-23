@@ -61,7 +61,6 @@ namespace Flux {
 
 	void EditorLayer::OnImGuiRender()
 	{
-#pragma region ImGuiDockspace
 		static bool dockspaceOpen = true;
 		static bool optFullscreen = true;
 		static ImGuiDockNodeFlags dockFlags = ImGuiDockNodeFlags_None;
@@ -98,7 +97,6 @@ namespace Flux {
 			ImGui::DockSpace(dockspaceID, { 0.0f, 0.0f }, dockFlags);
 		}
 		style.WindowMinSize.x = 32.0f;
-#pragma endregion
 
 #pragma region Toolbar
 
